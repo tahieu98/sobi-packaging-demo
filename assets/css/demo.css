@@ -1,3 +1,21 @@
 /* Demo-only additions, loaded after the Sobi design system. */
 .sobi-demo-banner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 28px;padding:8px 20px;background:#f3edf8;color:#2d1947;font-size:12px;line-height:1.5;border-bottom:1px solid #e6dced}.sobi-demo-banner strong{font-size:11px;letter-spacing:.07em}.sobi-demo-banner a{font-weight:600;white-space:nowrap}.sobi-demo-banner a:hover{text-decoration:underline}.sobi-demo-form-note{font-size:14px;color:#574761;background:#f6f2fa;border-left:3px solid #8e6ca9;border-radius:3px;padding:12px 14px}.sobi-demo-result{margin-top:20px;padding:20px;background:#f5f8f5;border:1px solid #c8dfcd;border-radius:6px}.sobi-demo-result h3{font-size:20px}.sobi-demo-result dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:14px;margin-bottom:16px}.sobi-demo-result dd{overflow-wrap:anywhere}.sobi-demo-result .button{margin-bottom:0;font-size:14px}.sobi-demo-empty{padding:40px 20px;border:1px dashed #d6c9df;border-radius:8px;text-align:center;background:#faf8fc}.sobi-demo-empty p{margin-bottom:12px}.sobi-demo-empty .button{margin:0}.sobi-result-count[role=status]{min-height:24px}.sobi-demo-search-row{display:flex;gap:12px}.sobi-demo-search-row .button{margin:0}.sobi-demo-search{margin-block:30px}.sobi-demo-search-card{padding:22px 0;border-bottom:1px solid #e5e5e5}.sobi-demo-search-card h2{font-size:24px!important;margin-bottom:12px!important}.sobi-demo-search-card p{margin:0}.sobi-demo-comment-status{margin-top:16px;font-size:14px}.sobi-demo-local-comment{border-left:3px solid #f26921;padding:16px 20px;margin:16px 0;background:#faf8fc}.sobi-demo-local-comment p{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0}.sobi-demo-local-comment small{font-size:12px;color:#6d6872}.sobi-static-demo .sobi-pagination{flex-wrap:wrap}.sobi-static-demo .sobi-pagination a[aria-current=page]{pointer-events:none}.sobi-static-demo .sobi-blog-list{scroll-margin-top:24px}.sobi-static-demo .sobi-detail-body .accordion{margin-top:24px}.sobi-static-demo .sobi-gallery::backdrop{background:#21152ae6}.sobi-static-demo .sobi-gallery>img{max-height:85vh;object-fit:contain}.sobi-static-demo .sobi-product-card-link{height:100%}
 @media(max-width:549px){.sobi-demo-banner{padding:7px 16px;justify-content:flex-start;font-size:11px;gap:3px}.sobi-demo-banner>a{display:none}.sobi-demo-search-row{flex-direction:column}.sobi-demo-result dl{grid-template-columns:1fr;gap:3px}.sobi-demo-result dd{margin-bottom:8px}}
+
+/* Center the desktop hero as two equal columns with a consistent shared gap. */
+@media (min-width: 1181px) {
+  .sobi-static-demo .sobi-hero.sobi-hero-video > .section-content > .sobi-hero-layout {
+    width: calc(100% - 80px);
+    max-width: 1600px;
+    margin-inline: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    align-items: center;
+  }
+
+  .sobi-static-demo .sobi-hero.sobi-hero-video .sobi-hero-copy > .col-inner {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+}
