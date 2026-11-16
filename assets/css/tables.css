@@ -1,0 +1,44 @@
+.sobi-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 24px 0;
+  border: 1px solid #ded7e6;
+  border-top: 3px solid #f26921;
+  border-radius: 6px;
+  background: #fff;
+  -webkit-overflow-scrolling: touch;
+}
+.sobi-table-scroll:focus-visible { outline: 3px solid #f26921; outline-offset: 3px; }
+.sobi-table-scroll .sobi-table { width: 100%; min-width: 560px; margin: 0; border-collapse: separate; border-spacing: 0; font-size: 14px; line-height: 1.65; }
+.sobi-table caption { caption-side: top; padding: 16px 20px; text-align: left; font-weight: 600; color: #2d1947; background: #fff; }
+.sobi-table-scroll .sobi-table :is(th, td) {
+  padding: 17px 20px;
+  border: 0;
+  border-bottom: 1px solid #ded7e6;
+  border-right: 1px solid #ded7e6;
+  text-align: left;
+  vertical-align: middle;
+  text-transform: none;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  font-size: inherit;
+  color: var(--st-body-text, #302c35);
+  background: var(--st-body-bg, #fff);
+}
+.sobi-table-scroll .sobi-table.has-first-column tbody th:first-child {
+  background: var(--st-first-bg, #f1edf6);
+  color: var(--st-first-text, #2d1947);
+  font-weight: 600;
+}
+.sobi-table-scroll .sobi-table thead th {
+  background: var(--st-head-bg, #2d1947);
+  color: var(--st-head-text, #fff);
+  font-weight: 600;
+}
+.sobi-table-scroll .sobi-table tr > :last-child { border-right: 0; }
+.sobi-table-scroll .sobi-table tbody tr:last-child > * { border-bottom: 0; }
+@media (max-width: 549px) {
+  .sobi-table-scroll .sobi-table { font-size: 13px; }
+  .sobi-table-scroll .sobi-table :is(th,td) { padding: 13px 16px; }
+}

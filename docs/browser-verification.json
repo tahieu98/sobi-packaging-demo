@@ -1,0 +1,276 @@
+{
+  "date": "2026-11-17",
+  "responsive": [
+    {
+      "width": 390,
+      "path": "index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "ve-sobi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "san-pham/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "in-theo-yeu-cau/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "quy-trinh/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "lien-he/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "chinh-sach-bao-mat/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "giay-kraft/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "blog/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "mau-tui/kraft-quai-xoan-sgd01/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "blog/quy-trinh-san-xuat-tui-giay-bang-may-tai-sobi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "path": "blog/chuyen-muc/kien-thuc-bao-bi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "ve-sobi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "san-pham/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "in-theo-yeu-cau/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "quy-trinh/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "lien-he/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "chinh-sach-bao-mat/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "giay-kraft/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "blog/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "mau-tui/kraft-quai-xoan-sgd01/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "blog/quy-trinh-san-xuat-tui-giay-bang-may-tai-sobi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "blog/chuyen-muc/kien-thuc-bao-bi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "ve-sobi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "san-pham/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "in-theo-yeu-cau/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "quy-trinh/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "lien-he/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "chinh-sach-bao-mat/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "giay-kraft/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "blog/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "mau-tui/kraft-quai-xoan-sgd01/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "blog/quy-trinh-san-xuat-tui-giay-bang-may-tai-sobi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "blog/chuyen-muc/kien-thuc-bao-bi/index.html",
+      "broken": [],
+      "h1": 1,
+      "overflow": false
+    }
+  ],
+  "flows": [
+    "menu tabs and Escape",
+    "mobile menu",
+    "header SKU/name search",
+    "catalog filter/pagination/empty state",
+    "blog search/category/pagination",
+    "product gallery and quote prefill",
+    "required quote fields and demo submit/reset",
+    "PNG selection and invalid TXT rejection",
+    "FAQ accordion",
+    "local demo comments without email display",
+    "copy link",
+    "GitHub project subpath and nested 404"
+  ],
+  "limitations": [
+    "No WordPress/admin/database integration; quote and comment are simulated",
+    "External Facebook/YouTube playback depends on those services",
+    "No physical-device or Safari validation"
+  ]
+}

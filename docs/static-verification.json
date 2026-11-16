@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-17",
+  "html_pages": 43,
+  "local_references_checked": 3803,
+  "all_pages_http_200": true,
+  "mp4_range": {
+    "http": 206,
+    "bytes": 1024,
+    "content_range": "bytes 0-1023/16681088",
+    "matches_original": true
+  },
+  "site_bytes": 21326737,
+  "failures": []
+}
