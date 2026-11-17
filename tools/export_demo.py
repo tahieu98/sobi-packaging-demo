@@ -9,7 +9,11 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
-import json, re, shutil, posixpath, datetime, hashlib
+import json, re, shutil, posixpath, datetime, hashlib, argparse
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--only', action='append', default=[], help='Export this route only; repeat for a batch. Preserve other page bodies and existing catalogue/blog data.')
+selected_routes = set(parser.parse_args().only)
 
 OUT = Path(__file__).resolve().parents[1]
 SITE = 'http://sobi-packaging.test/'
@@ -45,6 +49,8 @@ with ThreadPoolExecutor(max_workers=5) as pool:
 error_html=fetch(SITE+'sobi-demo-missing-page/')
 documents['404.html']=error_html
 known=set(base_routes)|{'search/'}
+if selected_routes - known:
+    raise RuntimeError('Unknown export routes: '+', '.join(sorted(selected_routes - known)))
 
 # Sobi assets only: no Flatsome parent runtime, WordPress JS or admin files.
 shutil.copytree(THEME, OUT/'assets/theme', dirs_exist_ok=True, ignore=shutil.ignore_patterns('sobi.js','.DS_Store'))
@@ -146,6 +152,11 @@ for r,raw in documents.items():
     doc=soup(raw);main=doc.select_one('main');title=main.select_one('h1') if main else None
     if title:search_entries.append({'route':r,'title':title.get_text(' ',strip=True),'text':main.get_text(' ',strip=True)[:25000]})
 data={'products':products,'posts':blogs,'categories':[{'slug':c['slug'],'name':c['name'],'route':route(c['link'])} for c in categories],'search':search_entries}
+if selected_routes:
+    previous=json.loads((OUT/'assets/js/data.js').read_text().split(' = ',1)[1].rstrip(';\n'))
+    updates={entry['route']:entry for entry in search_entries if entry['route'] in selected_routes}
+    previous['search']=[updates.pop(entry['route'],entry) for entry in previous['search']]+list(updates.values())
+    data=previous
 (OUT/'assets/js/data.js').write_text('window.SOBI_DATA = '+json.dumps(data,ensure_ascii=False).replace('<','\\u003c')+';\n')
 
 # An extra native static search page supports site-wide search widgets.
@@ -156,6 +167,7 @@ search_doc.title.string='Tìm kiếm nội dung | Sobi Packaging Demo'
 documents['search/']=str(search_doc)
 
 for r,raw in documents.items():
+    if selected_routes and r not in selected_routes: continue
     doc=soup(raw)
     # Keep content-level builder styles; replace the CMS head/runtime entirely.
     title=doc.title.get_text() if doc.title else 'Sobi Packaging'
@@ -253,13 +265,35 @@ for r,raw in documents.items():
             anchor['data-demo-share']='facebook'
             anchor['href']='https://www.facebook.com/sharer/sharer.php'
     for jsfile in ['data.js','sobi.js','demo.js']:
-        doc.body.append(doc.new_tag('script',src=relative_root(r)+'assets/js/'+jsfile,defer=''))
+        version=hashlib.sha256((OUT/'assets/js'/jsfile).read_bytes()).hexdigest()[:12]
+        doc.body.append(doc.new_tag('script',src=relative_root(r)+'assets/js/'+jsfile+'?v='+version,defer=''))
     noscript=doc.new_tag('noscript');noscript.string='Bật JavaScript để dùng bộ lọc, menu và form mô phỏng. Nội dung trang vẫn có thể đọc trực tiếp.';doc.body.append(noscript)
     output=OUT/('404.html' if r=='404.html' else r+'index.html')
     output.parent.mkdir(parents=True,exist_ok=True);output.write_text(str(doc))
 
+if selected_routes:
+    # Shared navigation/styles change everywhere; preserve existing editorial bodies.
+    native_menu=soup(documents['']).select_one('#sobi-mega')
+    for output in OUT.rglob('*.html'):
+        doc=soup(output.read_text())
+        route_meta=doc.select_one('meta[name="sobi-route"]')
+        if route_meta is None: continue
+        r=route_meta['content']
+        existing_menu=doc.select_one('#sobi-mega')
+        if existing_menu:
+            existing_menu.replace_with(rewrite_tree(soup(str(native_menu)),r))
+        for link in doc.select('link[rel="stylesheet"]'):
+            path=link['href'].split('?',1)[0]
+            css=(output.parent/unquote(path)).resolve()
+            link['href']=path+'?v='+hashlib.sha256(css.read_bytes()).hexdigest()[:12]
+        for script in doc.select('script[src]'):
+            path=script['src'].split('?',1)[0]
+            asset=(output.parent/unquote(path)).resolve()
+            if asset.is_file(): script['src']=path+'?v='+hashlib.sha256(asset.read_bytes()).hexdigest()[:12]
+        output.write_text(str(doc))
+
 (OUT/'.nojekyll').touch()
 (OUT/'robots.txt').write_text('User-agent: *\nDisallow: /\n')
-manifest={'generated':'2026-11-17','source':SITE,'pages':[r+'index.html' if r!='404.html' else r for r in documents],'products':len(products),'blog_posts':len(blogs),'categories':len(categories),'media_files':len(MEDIA),'video':[{'file':str(p.relative_to(OUT)),'bytes':p.stat().st_size} for p in (OUT/'assets').rglob('*.mp4')],'source_blog_landing_rebuilt':True}
+manifest={'generated':'2026-11-17','source':SITE,'pages':[r+'index.html' if r!='404.html' else r for r in documents],'products':len(products),'blog_posts':len(blogs),'categories':len(categories),'media_files':len(MEDIA),'video':[{'file':str(p.relative_to(OUT)),'bytes':p.stat().st_size} for p in (OUT/'assets').rglob('*.mp4')],'source_blog_landing_rebuilt':not bool(soup(documents['blog/']).select_one('.sobi-blog-list'))}
 (OUT/'docs/content-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps({**manifest,'pages':len(manifest['pages'])},ensure_ascii=False,indent=2))

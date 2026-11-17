@@ -1,7 +1,24 @@
 {
   "generated": "2026-11-17",
-  "source": "http://localhost:8080/sobi-packaging/",
+  "source": "http://sobi-packaging.test/",
   "pages": [
+    "san-pham/bao-bi-theo-nhu-cau/index.html",
+    "san-pham/thung-carton/index.html",
+    "san-pham/hop-thoi-trang/index.html",
+    "san-pham/hop-qua-tang/index.html",
+    "san-pham/hop-giay/index.html",
+    "san-pham/hop-cung/index.html",
+    "san-pham/hop-tet/index.html",
+    "san-pham/tui-tet/index.html",
+    "san-pham/tui-giay-c/index.html",
+    "san-pham/tui-giay-my-thuat-cao-cap/index.html",
+    "san-pham/tui-giay-my-thuat/index.html",
+    "san-pham/tui-kraft-cho-qua-tang-ban-le/index.html",
+    "san-pham/tui-kraft-cho-thu-cong-handmade/index.html",
+    "san-pham/tui-kraft-cho-hoa-my-pham/index.html",
+    "san-pham/tui-kraft-cho-thoi-trang/index.html",
+    "san-pham/tui-kraft-cho-tiem-hoa/index.html",
+    "san-pham/tui-kraft-cho-phu-kien-dien-thoai/index.html",
     "blog/index.html",
     "giay-kraft/index.html",
     "chinh-sach-bao-mat/index.html",
@@ -49,12 +66,12 @@
   "products": 9,
   "blog_posts": 18,
   "categories": 3,
-  "media_files": 45,
+  "media_files": 38,
   "video": [
     {
       "file": "assets/media/2026/11/sobi-san-xuat-1080p.mp4",
       "bytes": 16681088
     }
   ],
-  "source_blog_landing_rebuilt": true
+  "source_blog_landing_rebuilt": false
 }

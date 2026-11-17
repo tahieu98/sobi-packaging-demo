@@ -48,7 +48,7 @@ if video_status!=206 or video_bytes!=1024:failures.append('MP4 byte-range suppor
 video_source=Path('/Applications/XAMPP/sobi-packaging/website/wp-content/uploads/2026/11/sobi-san-xuat-1080p.mp4')
 video_hash_matches=hashlib.sha256(video.read_bytes()).digest()==hashlib.sha256(video_source.read_bytes()).digest()
 if not video_hash_matches:failures.append('Video differs from source')
-report={'date':'2026-11-17','html_pages':len(pages),'local_references_checked':references,'all_pages_http_200':all(s==200 for s in statuses),'mp4_range':{'http':video_status,'bytes':video_bytes,'content_range':content_range,'matches_original':video_hash_matches},'site_bytes':sum(p.stat().st_size for p in ROOT.rglob('*') if p.is_file()),'failures':failures}
+report={'date':'2026-11-17','html_pages':len(pages),'local_references_checked':references,'all_pages_http_200':all(s==200 for s in statuses),'mp4_range':{'http':video_status,'bytes':video_bytes,'content_range':content_range,'matches_original':video_hash_matches},'site_bytes':sum(p.stat().st_size for p in ROOT.rglob('*') if p.is_file() and '.git' not in p.relative_to(ROOT).parts),'failures':failures}
 (ROOT/'docs/static-verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False,indent=2))
 raise SystemExit(bool(failures))

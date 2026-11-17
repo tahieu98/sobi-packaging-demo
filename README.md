@@ -17,7 +17,7 @@ Nhấp đúp `Start-Demo.command` để mở preview bằng Terminal trên macOS
 
 ## Nội dung và tương tác
 
-43 tệp HTML gồm các trang thông tin, 9 chi tiết mẫu túi, 18 bài Blog, 3 chuyên mục, trang tìm kiếm, 404 và hai trang mẫu cũ vốn đang public tại nguồn. Bản đồ đầy đủ ở `docs/content-manifest.json`.
+60 tệp HTML gồm 17 trang danh mục thứ cấp, các trang thông tin, 9 chi tiết mẫu túi, 18 bài Blog, 3 chuyên mục, trang tìm kiếm, 404 và hai trang mẫu cũ vốn đang public tại nguồn. Bản đồ đầy đủ ở `docs/content-manifest.json`.
 
 - Header/mobile menu, danh mục 4 tab, điều khiển bằng phím/Escape, link social và nút về đầu trang.
 - Trang Sản phẩm: tìm tên/mã, tìm không dấu, lọc nhóm, phân trang 8 mẫu/trang và trạng thái rỗng.
@@ -47,7 +47,7 @@ Form báo giá chỉ dựng bản tóm tắt trên thiết bị, không gửi em
 
 ## Ghi nhận khi chuyển đổi
 
-Trang Blog nguồn có phần danh sách trống tại thời điểm khảo sát, trong khi ba chuyên mục vẫn trả đủ 18 bài. Demo dựng danh sách Blog bằng chính các thẻ bài viết công khai đó. Header/footer nguồn cũng đang thiếu một số Settings liên hệ; demo sử dụng lại ba URL social từ section Kết nối và số hotline đã có trong Zalo/tài liệu, không tự thêm email/địa chỉ.
+Trang Blog nguồn có phần danh sách trống tại thời điểm xuất lần đầu (hiện đã được sửa ở WordPress), trong khi ba chuyên mục vẫn trả đủ 18 bài. Demo dựng danh sách Blog bằng chính các thẻ bài viết công khai đó. Header/footer nguồn cũng đang thiếu một số Settings liên hệ; demo sử dụng lại ba URL social từ section Kết nối và số hotline đã có trong Zalo/tài liệu, không tự thêm email/địa chỉ.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
 
@@ -57,7 +57,7 @@ Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội
 
 Đối soát bố cục cập nhật ngày 17/11/2026: [báo cáo so với WordPress](docs/layout-parity.md), gồm lỗi icon mũi tên, grid trang Liên hệ, bảng kraft, form và caption video; 30 cặp đo ở desktop/tablet/mobile cùng các khác biệt còn lại của bản demo.
 
-- 43 tệp HTML trả HTTP 200; đã kiểm tra 3.803 tham chiếu local, không có đích bị thiếu.
+- Order 8: 60 tệp HTML trả HTTP 200; đã kiểm tra 5.274 tham chiếu local, không có đích bị thiếu. 17 trang danh mục mới được kiểm tra trên WordPress/demo ở 390/768/1440px; xem [chi tiết](docs/subcategory-pages.md).
 - 12 trang đại diện × 390/768/1440 px: 36/36 lượt có một H1, không tràn ngang và không có ảnh hỏng được phát hiện.
 - Đã thử menu/tab/Escape, menu mobile, tìm/lọc/phân trang/empty state, gallery, prefill sản phẩm, form báo giá/reset, chọn PNG/chặn TXT, FAQ, bình luận thử và copy link.
 - Đã kiểm tra đường dẫn project `/sobi-packaging/` và 404 lồng nhiều cấp. MP4 có cùng SHA256 với nguồn; request byte-range trả HTTP 206 đúng độ dài.

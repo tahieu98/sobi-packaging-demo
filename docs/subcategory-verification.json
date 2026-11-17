@@ -1,0 +1,138 @@
+{
+  "date": "2026-11-17",
+  "new_pages": [
+    {
+      "id": 276,
+      "title": "Túi kraft cho phụ kiện điện thoại",
+      "url": "http://sobi-packaging.test/san-pham/tui-kraft-cho-phu-kien-dien-thoai/",
+      "action": "created"
+    },
+    {
+      "id": 278,
+      "title": "Túi kraft cho tiệm hoa",
+      "url": "http://sobi-packaging.test/san-pham/tui-kraft-cho-tiem-hoa/",
+      "action": "created"
+    },
+    {
+      "id": 280,
+      "title": "Túi kraft cho thời trang",
+      "url": "http://sobi-packaging.test/san-pham/tui-kraft-cho-thoi-trang/",
+      "action": "created"
+    },
+    {
+      "id": 282,
+      "title": "Túi kraft cho hóa - mỹ phẩm",
+      "url": "http://sobi-packaging.test/san-pham/tui-kraft-cho-hoa-my-pham/",
+      "action": "created"
+    },
+    {
+      "id": 284,
+      "title": "Túi kraft cho thủ công / handmade",
+      "url": "http://sobi-packaging.test/san-pham/tui-kraft-cho-thu-cong-handmade/",
+      "action": "created"
+    },
+    {
+      "id": 286,
+      "title": "Túi kraft cho quà tặng & bán lẻ",
+      "url": "http://sobi-packaging.test/san-pham/tui-kraft-cho-qua-tang-ban-le/",
+      "action": "created"
+    },
+    {
+      "id": 288,
+      "title": "Túi giấy mỹ thuật",
+      "url": "http://sobi-packaging.test/san-pham/tui-giay-my-thuat/",
+      "action": "created"
+    },
+    {
+      "id": 290,
+      "title": "Túi giấy mỹ thuật cao cấp",
+      "url": "http://sobi-packaging.test/san-pham/tui-giay-my-thuat-cao-cap/",
+      "action": "created"
+    },
+    {
+      "id": 292,
+      "title": "Túi giấy C",
+      "url": "http://sobi-packaging.test/san-pham/tui-giay-c/",
+      "action": "created"
+    },
+    {
+      "id": 294,
+      "title": "Túi Tết",
+      "url": "http://sobi-packaging.test/san-pham/tui-tet/",
+      "action": "created"
+    },
+    {
+      "id": 296,
+      "title": "Hộp Tết",
+      "url": "http://sobi-packaging.test/san-pham/hop-tet/",
+      "action": "created"
+    },
+    {
+      "id": 298,
+      "title": "Hộp cứng",
+      "url": "http://sobi-packaging.test/san-pham/hop-cung/",
+      "action": "created"
+    },
+    {
+      "id": 300,
+      "title": "Hộp giấy",
+      "url": "http://sobi-packaging.test/san-pham/hop-giay/",
+      "action": "created"
+    },
+    {
+      "id": 302,
+      "title": "Hộp quà tặng",
+      "url": "http://sobi-packaging.test/san-pham/hop-qua-tang/",
+      "action": "created"
+    },
+    {
+      "id": 304,
+      "title": "Hộp thời trang",
+      "url": "http://sobi-packaging.test/san-pham/hop-thoi-trang/",
+      "action": "created"
+    },
+    {
+      "id": 306,
+      "title": "Thùng carton",
+      "url": "http://sobi-packaging.test/san-pham/thung-carton/",
+      "action": "created"
+    },
+    {
+      "id": 308,
+      "title": "Bao bì theo nhu cầu",
+      "url": "http://sobi-packaging.test/san-pham/bao-bi-theo-nhu-cau/",
+      "action": "created"
+    }
+  ],
+  "existing_cms_pages_unchanged": 12,
+  "existing_cms_revisions_unchanged": true,
+  "new_pages_have_revisions": true,
+  "repeated_apply_preserves_all_pages": true,
+  "menu_targets_all_17_pages": true,
+  "native_builder_render_preview_passed": 17,
+  "php_syntax_files_passed": 4,
+  "browser": {
+    "viewports": [
+      390,
+      768,
+      1440
+    ],
+    "checks": 102,
+    "overflow_count": 0,
+    "broken_images": 0,
+    "single_h1_and_three_faqs": true,
+    "prefill_cases": 34,
+    "wordpress_and_demo_faq_opened": true
+  },
+  "demo": {
+    "html_pages": 60,
+    "local_references_checked": 5274,
+    "existing_page_bodies_preserved": 43,
+    "existing_products_posts_categories_preserved": true
+  },
+  "limits": [
+    "Builder shortcodes rendered and revisions checked; authenticated UX Builder editor UI was not opened.",
+    "Chromium checks; Safari and physical devices not tested.",
+    "Quote forms were not submitted; no leads or files created."
+  ]
+}
