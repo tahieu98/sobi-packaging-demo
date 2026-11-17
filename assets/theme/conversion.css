@@ -289,3 +289,35 @@
   align-items: center;
   gap: 4px 24px;
 }
+
+/* Independent category/product scrolling within the visible dropdown area. */
+.sobi-site .sobi-mega.is-enhanced {
+  --sobi-mega-budget: min(70vh, var(--sobi-mega-available, 70vh));
+  max-height: var(--sobi-mega-budget);
+  overflow: hidden;
+  align-items: start;
+  grid-template-rows: minmax(0, 1fr);
+}
+.sobi-mega.is-enhanced > :is(.sobi-mega-choices, .sobi-mega-content) {
+  min-height: 0;
+  max-height: calc(var(--sobi-mega-budget) - 50px);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  padding: 4px;
+}
+.sobi-mega.is-enhanced .sobi-mega-choices button { flex-shrink: 0; }
+.sobi-mega.is-enhanced .sobi-mega-content:focus-visible {
+  outline: 2px solid var(--sobi-purple);
+  outline-offset: -2px;
+}
+@media (max-width: 700px) {
+  .sobi-site .sobi-mega.is-enhanced {
+    height: var(--sobi-mega-budget);
+    grid-template-rows: minmax(0, auto) minmax(0, 1fr);
+  }
+  .sobi-mega.is-enhanced > .sobi-mega-choices {
+    max-height: min(160px, calc(var(--sobi-mega-budget) * .4));
+  }
+  .sobi-mega.is-enhanced > .sobi-mega-content { max-height: 100%; }
+}

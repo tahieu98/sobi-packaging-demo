@@ -126,6 +126,23 @@
   window.addEventListener("blur", clearCardPress);
   window.addEventListener("pagehide", clearCardPress);
   window.addEventListener("pageshow", clearCardPress);
+  const megaMenu = document.getElementById('sobi-mega');
+  const updateMegaSpace = () => {
+    if (!megaMenu || megaMenu.hidden) return;
+    const viewportBottom = window.visualViewport
+      ? window.visualViewport.offsetTop + window.visualViewport.height
+      : window.innerHeight;
+    const available = Math.max(0, viewportBottom - megaMenu.getBoundingClientRect().top - 16);
+    megaMenu.style.setProperty('--sobi-mega-available', `${available}px`);
+  };
+  let megaResizeFrame;
+  const scheduleMegaSpace = () => {
+    cancelAnimationFrame(megaResizeFrame);
+    megaResizeFrame = requestAnimationFrame(updateMegaSpace);
+  };
+  window.addEventListener('resize', scheduleMegaSpace, { passive: true });
+  window.addEventListener('scroll', scheduleMegaSpace, { passive: true });
+  window.visualViewport?.addEventListener('resize', scheduleMegaSpace, { passive: true });
   const controls = [
     ["[data-menu-toggle]", "#sobi-mobile-menu"],
     ["[data-category-toggle]", "#sobi-mega"],
@@ -170,7 +187,12 @@
       panel.hidden = !open;
       button.setAttribute("aria-expanded", String(open));
       setLabel(button, open);
-      if (open) panel.querySelector("input, button, a")?.focus();
+      if (open) {
+        updateMegaSpace();
+        const target = panel.querySelector('[data-mega-tab][aria-selected="true"]')
+          || panel.querySelector('input, button, a');
+        target?.focus({ preventScroll: true });
+      }
     });
   });
   document.addEventListener("click", (event) => {
@@ -229,10 +251,24 @@
       item.tabIndex = selected ? 0 : -1;
       document.getElementById(item.getAttribute('aria-controls')).hidden = !selected;
     });
-    if (focus) tab.focus();
+    const content = megaMenu?.querySelector('.sobi-mega-content');
+    if (content) content.scrollTop = 0;
+    if (focus) tab.focus({ preventScroll: true });
+    // Reveal keyboard-selected categories within their own scroll region.
+    const choices = tab.closest('.sobi-mega-choices');
+    if (choices) {
+      const itemRect = tab.getBoundingClientRect();
+      const listRect = choices.getBoundingClientRect();
+      if (itemRect.top < listRect.top) choices.scrollTop -= listRect.top - itemRect.top + 4;
+      else if (itemRect.bottom > listRect.bottom) choices.scrollTop += itemRect.bottom - listRect.bottom + 4;
+    }
   };
   if (megaTabs.length) {
-    document.getElementById('sobi-mega').classList.add('is-enhanced');
+    megaMenu.classList.add('is-enhanced');
+    const content = megaMenu.querySelector('.sobi-mega-content');
+    content.tabIndex = 0;
+    content.setAttribute('role', 'region');
+    content.setAttribute('aria-label', 'Sản phẩm theo danh mục');
     selectMegaTab(megaTabs[0]);
     megaTabs.forEach((tab, index) => {
       tab.addEventListener('click', () => selectMegaTab(tab));

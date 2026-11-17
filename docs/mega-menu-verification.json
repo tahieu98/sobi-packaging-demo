@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-17",
+  "flows": [
+    {
+      "test": "detail scroll keeps categories and page fixed",
+      "categoryTop": 278.6796875,
+      "detailScroll": 148.5,
+      "outerScroll": 0,
+      "page": 0
+    },
+    {
+      "test": "24 categories independent scroll and keyboard End",
+      "active": "Danh mục thử 20",
+      "choicesScroll": 814,
+      "detailScroll": 0,
+      "page": 0,
+      "selected": "Danh mục thử 20"
+    },
+    {
+      "test": "WordPress product scroll",
+      "before": {
+        "categoryTop": 217.6796875,
+        "page": 0
+      },
+      "after": {
+        "categoryTop": 217.6796875,
+        "contentScroll": 148.5,
+        "outerScroll": 0,
+        "page": 0
+      }
+    }
+  ],
+  "responsiveDemo": [
+    {
+      "bottom": 878.4140625,
+      "contentHeight": 442,
+      "contentScrollHeight": 702,
+      "outerHeight": 628,
+      "outerScrollHeight": 628,
+      "overflow": false,
+      "sideHeight": 134,
+      "viewportHeight": 900,
+      "width": 390
+    },
+    {
+      "bottom": 864.796875,
+      "contentHeight": 434,
+      "contentScrollHeight": 917,
+      "outerHeight": 628,
+      "outerScrollHeight": 628,
+      "overflow": false,
+      "sideHeight": 118,
+      "viewportHeight": 900,
+      "width": 700
+    },
+    {
+      "bottom": 870.234375,
+      "contentHeight": 580,
+      "contentScrollHeight": 800,
+      "outerHeight": 628,
+      "outerScrollHeight": 628,
+      "overflow": false,
+      "sideHeight": 252,
+      "viewportHeight": 900,
+      "width": 768
+    },
+    {
+      "bottom": 870.234375,
+      "contentHeight": 580,
+      "contentScrollHeight": 1201,
+      "outerHeight": 628,
+      "outerScrollHeight": 628,
+      "overflow": false,
+      "sideHeight": 252,
+      "viewportHeight": 900,
+      "width": 1180
+    },
+    {
+      "bottom": 883.6796875,
+      "contentHeight": 580,
+      "contentScrollHeight": 728,
+      "outerHeight": 628,
+      "outerScrollHeight": 628,
+      "overflow": false,
+      "sideHeight": 234,
+      "viewportHeight": 900,
+      "width": 1440
+    }
+  ],
+  "additionalPassed": [
+    "Tab then PageDown scrolls products without moving page",
+    "Escape closes and returns focus",
+    "Category switch resets products to top",
+    "Reopen focuses selected category",
+    "650px viewport keeps dropdown above bottom margin"
+  ],
+  "fixture": "Temporary 24-category HTML fixture; removed after checks",
+  "passed": true
+}
