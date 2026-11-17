@@ -9,7 +9,7 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
-import json, re, shutil, posixpath, datetime
+import json, re, shutil, posixpath, datetime, hashlib
 
 OUT = Path(__file__).resolve().parents[1]
 SITE = 'http://sobi-packaging.test/'
@@ -168,7 +168,8 @@ for r,raw in documents.items():
     head.append(doc.new_tag('meta',attrs={'name':'sobi-root','content':relative_root(r)}))
     head.append(doc.new_tag('meta',attrs={'name':'sobi-route','content':r}))
     for css in ['assets/css/base.css','assets/css/tables.css','assets/theme/sobi.css','assets/theme/conversion.css','assets/css/demo.css']:
-        head.append(doc.new_tag('link',rel='stylesheet',href=relative_root(r)+css))
+        version = hashlib.sha256((OUT/css).read_bytes()).hexdigest()[:12]
+        head.append(doc.new_tag('link',rel='stylesheet',href=relative_root(r)+css+'?v='+version))
     head.append(doc.new_tag('link',rel='icon',href=relative_root(r)+'assets/theme/images/sobi-site-icon.png'))
     if r=='404.html':
         bootstrap=doc.new_tag('script')

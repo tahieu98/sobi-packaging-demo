@@ -13,7 +13,7 @@ Ngày 17/11/2026. Đối chiếu bản GitHub Pages, bản HTML local và WordPr
 | Form báo giá | Thiếu khoảng cách legend, nhịp label và padding input của nguồn | Bổ sung các primitive tương ứng, giữ vùng nhập nội dung demo đủ cao để sử dụng. |
 | Chú thích video hero | Quy tắc `figcaption` chung của demo ép về 14px | Cho caption video kế thừa 16px như WordPress; chiều cao media hero mobile khớp lại với bản gốc. |
 
-Chỉ sửa `assets/css/base.css` và `assets/css/demo.css`. CSS thiết kế Sobi trong `assets/theme/sobi.css` / `conversion.css` vốn đã khớp source WordPress; lỗi chính nằm ở lớp CSS thay thế parent theme. Không cần sửa 43 trang HTML hoặc xuất lại nội dung CMS.
+Thay đổi giao diện nằm trong `assets/css/base.css` và `assets/css/demo.css`. CSS thiết kế Sobi trong `assets/theme/sobi.css` / `conversion.css` vốn đã khớp source WordPress; lỗi chính nằm ở lớp CSS thay thế parent theme. Head của 43 HTML được bổ sung mã SHA256 rút gọn trong URL stylesheet để tránh cache CSS cũ trên GitHub Pages; exporter cũng sinh URL có phiên bản. Không xuất lại hoặc thay nội dung CMS.
 
 ## Phạm vi kiểm chứng
 
