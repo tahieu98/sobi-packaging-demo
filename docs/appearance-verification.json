@@ -1,0 +1,229 @@
+{
+  "date": "2026-11-17",
+  "expectedOrange": "#e26624",
+  "checks": [
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "WordPress",
+      "width": 390
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "WordPress",
+      "width": 768
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "WordPress",
+      "width": 1440
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "WordPress",
+      "width": 1920
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "Demo",
+      "width": 390
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "Demo",
+      "width": 768
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "Demo",
+      "width": 1440
+    },
+    {
+      "assurance": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "dotNodes": 0,
+      "eyebrow": "GÓI GHÉM SẢN PHẨM\nGỬI TRAO GIÁ TRỊ",
+      "footer": [
+        "rgb(226, 102, 36)"
+      ],
+      "h1": 1,
+      "overflow": false,
+      "steps": [
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)",
+        "rgb(226, 102, 36)"
+      ],
+      "strip": [
+        "rgb(226, 102, 36)"
+      ],
+      "stripText": "Bao bì giấy cho thương hiệu của bạn\nSản xuất & in theo yêu cầu",
+      "version": "Demo",
+      "width": 1920
+    }
+  ],
+  "passed": true,
+  "cms": {
+    "page": 19,
+    "changed_message_pairs": 2,
+    "native_shortcode_count_preserved": true,
+    "backup": "Private local content backup; not stored in Git"
+  }
+}

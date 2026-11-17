@@ -1,10 +1,10 @@
 /* Order 17 conversion: orange identity, blue actions and native quote form. */
 .sobi-site {
-  --sobi-orange-dark: #c04a0b;
+  --sobi-orange-dark: #e26624;
   --sobi-blue: #0f468a;
   --sobi-purple: #2d1947;
   --sobi-heading-display: 54px;
-  --sobi-gradient: linear-gradient(90deg, #c04a0b, #f26921);
+  --sobi-gradient: linear-gradient(90deg, #e26624, #f26921);
 }
 .sobi-site .sobi-business-topbar { background: #f5f6f8; color: #323741; }
 .sobi-business-topbar .sobi-shell { gap: 8px 24px; }
@@ -256,4 +256,36 @@
   .sobi-top-social { gap: 2px; }
   .sobi-top-social a { flex-basis: 32px; width: 32px; }
   .sobi-site .sobi-header-hotline--mobile { gap: 4px; padding-inline: 8px; }
+}
+
+/* Center the desktop hero as two equal columns with a consistent shared gap. */
+@media (min-width: 1181px) {
+  .sobi-site .sobi-hero.sobi-hero-video > .section-content > .sobi-hero-layout {
+    width: calc(100% - 80px);
+    max-width: 1600px;
+    margin-inline: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    align-items: center;
+  }
+
+  .sobi-site .sobi-hero.sobi-hero-video .sobi-hero-copy > .col-inner {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+}
+
+/* Brand message pairs use spacing and wrap naturally, without dot separators. */
+.sobi-hero-copy .sobi-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+.sobi-after-hero p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 24px;
 }

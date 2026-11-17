@@ -129,10 +129,6 @@
   font-weight: 600;
   color: var(--sobi-purple);
 }
-.sobi-top-dot {
-  padding: 0 12px;
-  color: var(--sobi-orange);
-}
 .sobi-mainbar {
   display: flex;
   align-items: center;
@@ -2463,7 +2459,6 @@
   gap: 4px 16px;
   padding-block: 8px;
 }
-.sobi-topbar .sobi-top-dot { padding-inline: 6px; }
 .sobi-site .sobi-hero .sobi-hero-explore {
   background: linear-gradient(180deg, #ffad62, #f26921);
   color: var(--sobi-purple) !important;

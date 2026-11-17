@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 import json, re, shutil, posixpath, datetime
 
 OUT = Path(__file__).resolve().parents[1]
-SITE = 'http://localhost:8080/sobi-packaging/'
+SITE = 'http://sobi-packaging.test/'
 RUNTIME = Path('/Applications/XAMPP/sobi-packaging/website')
 THEME = RUNTIME / 'wp-content/themes/sobi-flatsome/assets'
 MARKER = '__SOBI_ROOT__'
@@ -88,7 +88,7 @@ def rewrite_url(url,path='',template=False):
     if asset:return prefix+quote(asset,safe='/.-_')
     parts=urlsplit(url)
     if parts.netloc!=urlsplit(SITE).netloc:return url
-    if not parts.path.startswith('/sobi-packaging/'):return url
+    if not parts.path.startswith(urlsplit(SITE).path):return url
     dest=route(url);query=parts.query
     # Blog numbered URLs use the same HTML and browser-side pagination.
     m=re.search(r'^(.*?)/?page/(\d+)/$',dest)
