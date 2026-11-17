@@ -19,3 +19,13 @@
     margin: 0;
   }
 }
+
+/* Match native form rhythm without reducing the demo's usable textarea. */
+.sobi-static-demo .sobi-quote-form legend {
+  margin-top: 30px;
+  border-bottom: 1px solid #eee;
+}
+.sobi-static-demo .sobi-quote-form input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="hidden"]) {
+  padding: 10px 12px;
+}
+.sobi-static-demo .sobi-quote-form textarea { min-height: 100px; }

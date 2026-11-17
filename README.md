@@ -55,6 +55,8 @@ Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội
 
 ## Kết quả kiểm tra
 
+Đối soát bố cục cập nhật ngày 17/11/2026: [báo cáo so với WordPress](docs/layout-parity.md), gồm lỗi icon mũi tên, grid trang Liên hệ, bảng kraft, form và caption video; 30 cặp đo ở desktop/tablet/mobile cùng các khác biệt còn lại của bản demo.
+
 - 43 tệp HTML trả HTTP 200; đã kiểm tra 3.803 tham chiếu local, không có đích bị thiếu.
 - 12 trang đại diện × 390/768/1440 px: 36/36 lượt có một H1, không tràn ngang và không có ảnh hỏng được phát hiện.
 - Đã thử menu/tab/Escape, menu mobile, tìm/lọc/phân trang/empty state, gallery, prefill sản phẩm, form báo giá/reset, chọn PNG/chặn TXT, FAQ, bình luận thử và copy link.
