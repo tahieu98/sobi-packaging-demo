@@ -12,8 +12,11 @@ from bs4 import BeautifulSoup
 import json, re, shutil, posixpath, datetime, hashlib, argparse
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--only', action='append', default=[], help='Export this route only; repeat for a batch. Preserve other page bodies and existing catalogue/blog data.')
-selected_routes = set(parser.parse_args().only)
+export_mode = parser.add_mutually_exclusive_group()
+export_mode.add_argument('--only', action='append', default=[], help='Export this route only; repeat for a batch. Preserve other page bodies and existing catalogue/blog data.')
+export_mode.add_argument('--contacts-only', action='store_true', help='Refresh shared contact blocks from the public WordPress homepage.')
+args = parser.parse_args()
+selected_routes = set(args.only)
 
 OUT = Path(__file__).resolve().parents[1]
 SITE = 'http://sobi-packaging.test/'
@@ -33,6 +36,57 @@ def api(endpoint):
     return json.loads(fetch(SITE+'wp-json/wp/v2/'+endpoint+'?per_page=100'))
 
 def soup(text): return BeautifulSoup(text, 'html.parser')
+
+
+def refresh_public_contacts():
+    """Update shared contact markup without re-exporting pages or assets."""
+    selectors = (
+        '#header .sobi-business-info',
+        '#header .sobi-business-topbar .sobi-top-social',
+        '#header .sobi-header-hotline--mainbar',
+        '#header .sobi-header-hotline--mobile',
+        '#footer .sobi-footer-contact',
+        '#footer .sobi-footer-social',
+    )
+    homepage = soup(fetch(SITE))
+    fragments = {}
+    for selector in selectors:
+        block = homepage.select_one(selector)
+        if block is None or not block.get_text(strip=True):
+            raise RuntimeError(f'Missing public contact markup: {selector}')
+        for element in [block, *block.find_all(True)]:
+            if element.name not in {'a', 'br', 'div', 'i', 'nav', 'p', 'span'}:
+                raise RuntimeError(f'Unexpected element in {selector}: {element.name}')
+            if set(element.attrs) - {'aria-hidden', 'aria-label', 'class', 'href', 'rel', 'target'}:
+                raise RuntimeError(f'Unexpected contact attributes in {selector}')
+            if element.name == 'a' and urlsplit(element.get('href', '')).scheme not in {'https', 'mailto', 'tel'}:
+                raise RuntimeError(f'Unexpected contact link in {selector}')
+        fragments[selector] = str(block)
+
+    updated = {}
+    for output in sorted(OUT.rglob('*.html')):
+        raw = output.read_text(encoding='utf-8')
+        doc = soup(raw)
+        if doc.select_one('meta[name="sobi-route"]') is None:
+            continue
+        for selector, fragment in fragments.items():
+            block = doc.select_one(selector)
+            if block is None:
+                raise RuntimeError(f'Missing contact block in {output}: {selector}')
+            block.replace_with(soup(fragment).find())
+        rendered = str(doc)
+        if raw != rendered:
+            updated[output] = rendered
+    for output, rendered in updated.items():
+        output.write_bytes(rendered.encode('utf-8'))
+    print(f'Updated contact markup on {len(updated)} pages.')
+
+
+if args.contacts_only:
+    refresh_public_contacts()
+    raise SystemExit(0)
+
+
 def route(url): return unquote(urlsplit(url).path.removeprefix('/sobi-packaging/')).strip('/')+'/' if urlsplit(url).path.removeprefix('/sobi-packaging/').strip('/') else ''
 
 pages=api('pages'); posts=api('posts'); categories=api('categories')

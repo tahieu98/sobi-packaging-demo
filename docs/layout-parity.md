@@ -25,7 +25,7 @@ Thay đổi giao diện nằm trong `assets/css/base.css` và `assets/css/demo.c
 
 ## Khác biệt còn được ghi nhận
 
-- Demo có banner nhận diện, số hotline và các kênh social; Settings của WordPress local hiện chưa xuất đủ các mục này ở header/footer. Vì vậy vị trí tuyệt đối của nội dung và chiều cao footer mobile khác nhau (hàng social thêm 44px).
+- Tại lần đo 17/11, thông tin liên hệ và các kênh social ở header/footer chưa khớp. Bản demo ngày 21/11 lấy cả hai khối từ trang chủ WordPress local, gồm email, địa chỉ và hotline. Banner nhận diện bản xem thử trên GitHub Pages vẫn tạo chênh lệch vị trí tuyệt đối của nội dung.
 - Form demo có thông báo mô phỏng và textarea tối thiểu 100px. Form cao hơn nguồn khoảng 112–163px tùy viewport. Đây là khác biệt của trải nghiệm demo; dữ liệu không gửi vào backend thật.
 - Hero ở mobile/tablet còn chênh khoảng 29–31px tổng chiều cao, chủ yếu do phần tử clearfix của `.row` trong parent WordPress tạo thêm một khoảng gap 28px, cùng chênh nhỏ chiều cao nút. Độ rộng hai khối và kích thước media đã được đối soát; demo không nhập cả runtime parent chỉ để tái tạo phần khoảng trống này.
 - **Thứ tự bài Blog khác nguồn:** nhiều bài có cùng timestamp đến giây; demo trước đây thu thập từ từng chuyên mục rồi sắp theo ngày. Trang Blog nguồn hiện đã có danh sách sau khi cấu hình CMS được sửa. Khác thứ tự/tiêu đề trong mỗi hàng khiến grid Blog ở 768px chênh khoảng 27px; kích thước thẻ và typography tương ứng không bị lỗi. Chưa thay dữ liệu hoặc thứ tự biên tập trong lần sửa CSS này.

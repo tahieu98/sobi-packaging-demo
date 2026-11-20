@@ -47,7 +47,11 @@ Form báo giá chỉ dựng bản tóm tắt trên thiết bị, không gửi em
 
 ## Ghi nhận khi chuyển đổi
 
-Trang Blog nguồn có phần danh sách trống tại thời điểm xuất lần đầu (hiện đã được sửa ở WordPress), trong khi ba chuyên mục vẫn trả đủ 18 bài. Demo dựng danh sách Blog bằng chính các thẻ bài viết công khai đó. Header/footer nguồn cũng đang thiếu một số Settings liên hệ; demo sử dụng lại ba URL social từ section Kết nối và số hotline đã có trong Zalo/tài liệu, không tự thêm email/địa chỉ.
+Trang Blog nguồn có phần danh sách trống tại thời điểm xuất lần đầu (hiện đã được sửa ở WordPress), trong khi ba chuyên mục vẫn trả đủ 18 bài. Demo dựng danh sách Blog bằng chính các thẻ bài viết công khai đó.
+
+Lần xuất ban đầu thiếu thông tin liên hệ trong header/footer. Ngày 21/11/2026, cả 60 trang HTML đã nhận email, địa chỉ, hotline và liên kết mạng xã hội từ phần công khai của WordPress local.
+
+Khi các mục liên hệ được cập nhật trong WordPress, chạy `python tools/export_demo.py --contacts-only` từ repo demo để làm mới header/footer trên mọi trang. Lệnh đọc trang chủ công khai của WordPress tại `sobi-packaging.test`; các nội dung trang, dữ liệu tìm kiếm và hành vi form mô phỏng được giữ theo bản demo.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
 
