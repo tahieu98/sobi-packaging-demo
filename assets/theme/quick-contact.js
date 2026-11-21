@@ -12,26 +12,4 @@
       desktop.querySelector('summary').focus();
     });
   }
-
-  const mobile = document.querySelector('[data-quick-mobile]');
-  if (!mobile) return;
-
-  const mobileViewport = window.matchMedia('(max-width: 767px)');
-  const quote = document.getElementById('yeu-cau-bao-gia');
-  let quoteVisible = false;
-  const updateMobileBar = () => {
-    mobile.hidden = !mobileViewport.matches || window.scrollY < 240 || quoteVisible;
-  };
-
-  if (quote) {
-    new IntersectionObserver(([entry]) => {
-      quoteVisible = entry.isIntersecting;
-      updateMobileBar();
-    }).observe(quote);
-  }
-
-  window.addEventListener('scroll', updateMobileBar, { passive: true });
-  window.addEventListener('pageshow', updateMobileBar);
-  mobileViewport.addEventListener('change', updateMobileBar);
-  updateMobileBar();
 })();

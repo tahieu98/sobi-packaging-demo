@@ -79,7 +79,6 @@
 .sobi-site .sobi-hero a.button.sobi-hero-zalo { background: var(--sobi-blue); color: #fff !important; border-radius: 4px; box-shadow: none; }
 .sobi-site .sobi-hero :is(.sobi-hero-explore,.sobi-hero-custom):is(:hover,:focus-visible,.is-pressed) { background: #ffbe85; color: var(--sobi-blue) !important; }
 .sobi-site .sobi-after-hero { background: var(--sobi-orange-dark); color: #fff; padding-block: 12px !important; }
-.sobi-after-hero p { text-align: center; margin: 0; font-size: 14px; font-weight: 600; }
 .sobi-site .sobi-assurance .col > .col-inner { background: var(--sobi-orange-dark); color: #fff; border: 0; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 24px 16px; gap: 0; }
 .sobi-site .sobi-assurance p { font-size: 14px; font-weight: 400; line-height: 1.7; color: var(--sobi-blue); text-align: center; margin: 0; }
 .sobi-site .sobi-assurance strong { display: block; font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 6px; }
@@ -98,7 +97,8 @@
 .sobi-footer-contact :is(a,p) { overflow-wrap: anywhere; }
 .sobi-footer-contact p { margin-bottom: 0; }
 .sobi-footer-actions { margin-block: 20px 16px; }
-.sobi-site .sobi-footer .sobi-footer-quote { max-width: 100%; }
+.sobi-footer-channels { display: inline-grid; max-width: 100%; }
+.sobi-site .sobi-footer .sobi-footer-quote { width: 100%; justify-content: center; }
 .sobi-site .sobi-footer .sobi-footer-quote:is(:hover,:focus-visible,:active) { text-decoration: none; }
 .sobi-site .sobi-footer-social { flex-wrap: wrap; gap: 8px; }
 .sobi-site .sobi-footer-social a { flex: 0 0 44px; width: 44px; height: 44px; text-decoration: none; }
@@ -110,7 +110,7 @@
 .sobi-quote-intro li { margin-bottom: 12px; }
 .sobi-quote-intro .img { margin-top: 28px; }
 .sobi-quote-intro img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; }
-.sobi-site .sobi-quote { max-width: none; margin: 0; padding: 28px; border: 1px solid #d5dce5; border-top: 5px solid var(--sobi-orange-dark); border-radius: 6px; background: #f8fafc; scroll-margin-top: 24px; }
+.sobi-site .sobi-quote { max-width: none; margin: 0; padding: 28px; border: 2px solid var(--sobi-orange-dark); border-radius: 6px; background: #f8fafc; scroll-margin-top: 24px; }
 .sobi-site #main .sobi-quote h2 { color: var(--sobi-purple); font-size: 28px; line-height: 1.3; margin-bottom: 8px; }
 .sobi-quote-description { color: #525b68; font-size: 14px; margin-bottom: 24px; }
 .sobi-quote-form fieldset { min-width: 0; border: 0; margin: 0 0 20px; padding: 0; }
@@ -136,15 +136,26 @@
 .sobi-site .sobi-quote-form .sobi-consent { display: flex; align-items: start; font-size: 14px; gap: 10px; margin-block: 20px; }
 .sobi-consent input { flex: 0 0 18px; width: 18px; height: 18px; margin-top: 3px; accent-color: var(--sobi-blue); }
 .sobi-consent a { text-decoration: underline; color: var(--sobi-blue); }
-.sobi-site .sobi-quote-form .sobi-submit { width: 100%; background: var(--sobi-blue); color: #fff !important; border-color: var(--sobi-blue); border-radius: 4px; }
+.sobi-site .sobi-quote-form .sobi-submit { width: 100%; border-radius: 4px; }
 .sobi-submit:disabled { opacity: .65; cursor: wait; }
 .sobi-site .sobi-social-section .sobi-social-benefits h3 { color: #fff; }
-.sobi-site .sobi-social-section .sobi-social-consult { background: var(--sobi-blue); border-color: var(--sobi-blue); color: #fff !important; }
-.sobi-site :is(.sobi-cta,.sobi-hero-zalo,.sobi-submit,.sobi-social-consult):is(:hover,:focus-visible) { background: #0a356b; color: #fff !important; }
-.sobi-site .sobi-hero a.button.sobi-hero-zalo:is(:hover,:focus-visible),
-.sobi-site .sobi-quote-form .sobi-submit:is(:hover,:focus-visible),
-.sobi-site .sobi-social-section .sobi-social-consult:is(:hover,:focus-visible) { background: #0a356b; color: #fff !important; }
-.sobi-site :is(.sobi-cta,.sobi-hero-zalo,.sobi-submit,.sobi-social-consult):focus-visible { outline: 3px solid var(--sobi-blue); outline-offset: 3px; }
+.sobi-site .sobi-social-section .sobi-social-consult { width: 100%; justify-content: center; margin-inline: 0; }
+.sobi-site :is(.sobi-cta,.sobi-hero-zalo):is(:hover,:focus-visible) { background: #0a356b; color: #fff !important; }
+.sobi-site .sobi-hero a.button.sobi-hero-zalo:is(:hover,:focus-visible) { background: #0a356b; color: #fff !important; }
+.sobi-site :is(.sobi-cta,.sobi-hero-zalo):focus-visible { outline: 3px solid var(--sobi-blue); outline-offset: 3px; }
+.sobi-site :is(.sobi-quote-form .sobi-submit, .sobi-social-section .sobi-social-consult, .sobi-footer .sobi-footer-quote) {
+  background: var(--sobi-purple);
+  border-color: var(--sobi-purple);
+  color: #fff !important;
+}
+.sobi-site :is(.sobi-quote-form .sobi-submit, .sobi-social-section .sobi-social-consult, .sobi-footer .sobi-footer-quote):is(:hover, :focus-visible, :active) {
+  background: #442663;
+  border-color: #442663;
+}
+.sobi-site :is(.sobi-quote-form .sobi-submit, .sobi-social-section .sobi-social-consult, .sobi-footer .sobi-footer-quote):focus-visible {
+  outline: 3px solid var(--sobi-purple);
+  outline-offset: 3px;
+}
 .sobi-builder-preview :is(.sobi-mobile-quote,.sobi-back-top) { display: none !important; }
 .sobi-site .sobi-message { padding: 14px; margin-bottom: 20px; font-size: 16px; background: #fff; color: #922c17; border: 1px solid #922c17; }
 .sobi-site .sobi-message.is-success { color: #176139; border-color: #176139; }
@@ -170,8 +181,10 @@
 }
 @media (max-width: 849px) {
   .sobi-quote-layout > .col { flex-basis: 100%; max-width: 100%; }
-  .sobi-quote-intro .img { max-width: 400px; }
   .sobi-quote-layout { row-gap: 24px; }
+}
+@media (max-width: 767px) {
+  .sobi-quote-intro .img { max-width: 400px; }
 }
 @media (max-width: 700px) {
   .sobi-site .sobi-mega { grid-template-columns: minmax(0,1fr); }
@@ -278,18 +291,11 @@
   }
 }
 
-/* Brand message pairs use spacing and wrap naturally, without dot separators. */
+/* The hero eyebrow stays independent of the messages below the banner. */
 .sobi-hero-copy .sobi-eyebrow {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 18px;
-}
-.sobi-after-hero p {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 4px 24px;
 }
 
 /* Independent category/product scrolling within the visible dropdown area. */

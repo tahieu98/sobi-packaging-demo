@@ -2,6 +2,8 @@
 
 Ngày 17/11/2026. Đối chiếu bản GitHub Pages, bản HTML local và WordPress tại `http://sobi-packaging.test/`. Source WordPress local, worktree và hai nhánh GitHub `main` / `codex/sobi-development` cùng commit `a3de8531c235c434af226e05aa544795e9cb9f54` khi kiểm tra. Bản WordPress không bị chỉnh trong lần đối soát này.
 
+Báo cáo này ghi lại số đo ngày 17/11. Phần Trang chủ, báo giá và liên hệ nhanh cập nhật ngày 21/11 có kết quả riêng. [Đối chiếu Order 24](order-24.md)
+
 ## Những lỗi đã sửa trong demo
 
 | Thành phần | Nguyên nhân | Chỉnh sửa / kết quả |

@@ -279,7 +279,7 @@ def sync_public_audit():
         snapshots = dict(zip(source_paths, pool.map(lambda path: soup(fetch(SITE+path)), source_paths)))
 
     for name in ('sobi.css', 'conversion.css', 'header-audit.css', 'quick-contact.css',
-                 'home-audit.css', 'quick-contact.js', 'sobi.js'):
+                 'home-audit.css', 'quick-contact.js', 'icons/messenger.svg', 'sobi.js'):
         content = fetch_bytes(SITE+PUBLIC_THEME+name)
         if name == 'sobi.js':
             (OUT/'assets/js/sobi.js').write_bytes(make_demo_script(content.decode('utf-8')).encode('utf-8'))

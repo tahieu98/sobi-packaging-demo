@@ -2,7 +2,7 @@
 
 [**Xem demo online**](https://tahieu98.github.io/sobi-packaging-demo/) · [Repository](https://github.com/tahieu98/sobi-packaging-demo)
 
-Bản mô phỏng giao diện công khai, dựng từ nội dung website Sobi hiện có ngày 17/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
+Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật theo Order 24 ngày 21/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
 
 ## Mở bản demo
 
@@ -53,6 +53,8 @@ Lần xuất ban đầu thiếu thông tin liên hệ trong header/footer. Ngày
 
 Đợt rà soát ngày 21/11/2026 đồng bộ header, footer và liên hệ nhanh trên 60 trang. Trang chủ có nút báo giá nhanh, hiệu ứng ở phần chữ của thẻ mẫu túi và bốn bước quy trình. Cả hai form báo giá dùng gợi ý nhập từ website nguồn.
 
+Order 24 cập nhật dải thông điệp, form viền cam, bố cục tablet, ba CTA tím và thanh liên hệ mobile ghim ở đáy trên toàn site. [Chi tiết thiết kế và kiểm chứng](docs/order-24.md)
+
 Chạy `python tools/export_demo.py --sync-audit` để cập nhật các phần này từ các trang công khai tại `sobi-packaging.test`. Lệnh `python tools/export_demo.py --contacts-only` làm mới riêng thông tin liên hệ trong các thành phần dùng chung. Hai lệnh cần Python 3.10 trở lên và beautifulsoup4.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
@@ -61,7 +63,7 @@ Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội
 
 ## Kết quả kiểm tra
 
-Đối soát bố cục cập nhật ngày 17/11/2026: [báo cáo so với WordPress](docs/layout-parity.md), gồm lỗi icon mũi tên, grid trang Liên hệ, bảng kraft, form và caption video; 30 cặp đo ở desktop/tablet/mobile cùng các khác biệt còn lại của bản demo.
+Xem [kết quả Order 24](docs/order-24.md#tái-xuất-và-kiểm-chứng) cho bố cục và tương tác hiện tại. Báo cáo ngày 17/11/2026 ghi lại 30 cặp đo desktop, tablet và mobile, gồm icon mũi tên, grid Liên hệ, bảng kraft, form và caption video. [Báo cáo so với WordPress](docs/layout-parity.md)
 
 - Order 8: 60 tệp HTML trả HTTP 200; đã kiểm tra 5.274 tham chiếu local, không có đích bị thiếu. 17 trang danh mục mới được kiểm tra trên WordPress/demo ở 390/768/1440px; xem [chi tiết](docs/subcategory-pages.md).
 - 12 trang đại diện × 390/768/1440 px: 36/36 lượt có một H1, không tràn ngang và không có ảnh hỏng được phát hiện.

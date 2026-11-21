@@ -1,4 +1,84 @@
 /* Homepage calls to action, suggested products and working process. */
+.sobi-after-hero p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sobi-after-hero p > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sobi-after-hero p > span i {
+  flex: none;
+  color: var(--sobi-purple);
+  font-size: 19px;
+}
+
+@media (min-width: 768px) {
+  .sobi-after-hero p {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .sobi-after-hero p > span {
+    padding-inline: 24px;
+  }
+
+  .sobi-after-hero p > span + span {
+    border-inline-start: 2px solid var(--sobi-purple);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .sobi-quote-layout > .col {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .sobi-quote-layout > .sobi-quote-intro {
+    padding-right: 15px;
+  }
+
+  .sobi-quote-intro > .col-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(20px, 4vw, 48px);
+  }
+
+  .sobi-quote-intro .img {
+    margin-top: 0;
+  }
+}
+
+.sobi-social-copy .row.sobi-social-benefits {
+  width: 100%;
+  margin-inline: 0;
+  column-gap: clamp(12px, 3vw, 30px);
+}
+
+.sobi-social-benefits::after {
+  content: none;
+}
+
+.sobi-social-benefits > .col {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 0;
+}
+
+.sobi-social-benefits > .col > .col-inner {
+  width: 100%;
+}
+
 .sobi-site .sobi-hero .sobi-hero-quote {
   background: var(--sobi-purple);
   border-color: var(--sobi-purple);
