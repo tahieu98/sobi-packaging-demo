@@ -87,12 +87,8 @@
     document.getElementById(button.getAttribute('aria-controls')).hidden=expanded;
   }));
   document.querySelectorAll('.sobi-quote-form').forEach(form=>{
-    const prefill = new URLSearchParams(location.search);
-    if (prefill.get('product')) form.elements.message.value = `Tôi quan tâm mẫu ${prefill.get('product').slice(0,200)}`;
     const params=new URLSearchParams(location.search);
     if (params.get('product')) form.elements.message.value=`Tôi quan tâm mẫu ${params.get('product').slice(0,200)}`;
-    // The original HTML pattern is escaped for browsers' Unicode-set syntax.
-    form.elements.phone.pattern='[+0-9 ()\\-]{9,20}';
     form.addEventListener('submit',event=>{
       event.preventDefault();
       const status=form.parentElement.querySelector('.sobi-message');

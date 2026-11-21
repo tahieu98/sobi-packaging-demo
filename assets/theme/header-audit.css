@@ -1,0 +1,344 @@
+.sobi-site .sobi-business-topbar {
+  background: var(--sobi-blue);
+  color: #fff;
+  border: 0;
+}
+
+.sobi-business-topbar .sobi-shell {
+  display: block;
+}
+
+.sobi-business-topbar .sobi-business-info {
+  min-height: 36px;
+  padding-block: 6px;
+  gap: 4px 24px;
+}
+
+.sobi-business-topbar .sobi-business-info > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sobi-business-info i {
+  color: var(--sobi-orange);
+  font-size: 14px;
+}
+
+.sobi-business-info a:is(:hover, :focus-visible) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sobi-business-topbar .sobi-business-info .sobi-business-delivery {
+  margin-inline-start: auto;
+}
+
+.sobi-site .sobi-header {
+  border-bottom: 1px solid var(--sobi-line);
+}
+
+.sobi-header .sobi-mainbar {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "navigation search phone quote";
+  min-height: 80px;
+  gap: clamp(10px, 1.1vw, 16px);
+  padding-block: 12px;
+}
+
+.sobi-header-nav {
+  grid-area: navigation;
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.1vw, 16px);
+}
+
+.sobi-header .sobi-logo {
+  width: clamp(116px, 11vw, 156px);
+  padding: 0;
+}
+
+.sobi-header .sobi-logo img {
+  width: 100%;
+}
+
+.sobi-header .sobi-desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.15vw, 18px);
+  white-space: nowrap;
+}
+
+.sobi-header .sobi-nav {
+  gap: clamp(12px, 1.15vw, 18px);
+}
+
+.sobi-header .sobi-nav a {
+  font-size: 15px;
+}
+
+.sobi-site .sobi-header :is(.sobi-category-control > button, .sobi-header-hotline, .sobi-header-quote) {
+  min-height: 44px;
+  padding-inline: 14px;
+  background: var(--sobi-purple);
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.sobi-site .sobi-header :is(.sobi-category-control > button, .sobi-header-hotline, .sobi-header-quote):is(:hover, :focus-visible) {
+  background: #462c62;
+  color: #fff;
+  box-shadow: none;
+}
+
+.sobi-site .sobi-header :is(.sobi-category-control > button, .sobi-header-hotline, .sobi-header-quote):focus-visible {
+  outline: 2px solid var(--sobi-purple);
+  outline-offset: 3px;
+}
+
+.sobi-header .sobi-category-control > button {
+  min-width: 0;
+  gap: 7px;
+  font-size: 14px;
+}
+
+.sobi-site .sobi-header .sobi-mega {
+  inset: 100% 0 auto;
+  width: 100%;
+  white-space: normal;
+}
+
+.sobi-site .sobi-header-search {
+  grid-area: search;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #d7d2df;
+  border-radius: 999px;
+  background: #f8f7fa;
+  color: var(--sobi-purple);
+}
+
+.sobi-site .sobi-header-search:focus-within {
+  border-color: var(--sobi-purple);
+}
+
+.sobi-site .sobi-header-search input[type="search"] {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 0 0 0 14px;
+  background: transparent;
+  border: 0;
+  border-radius: 999px 0 0 999px;
+  color: var(--sobi-ink);
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.sobi-site .sobi-header-search input::placeholder {
+  color: #746c7e;
+  opacity: 1;
+}
+
+.sobi-site .sobi-header-search button {
+  display: grid;
+  flex: 0 0 44px;
+  min-width: 44px;
+  min-height: 42px;
+  place-items: center;
+  background: transparent;
+  border-radius: 0 999px 999px 0;
+  color: var(--sobi-purple);
+  box-shadow: none;
+}
+
+.sobi-site .sobi-header-search button:hover {
+  background: #ebe6f0;
+}
+
+.sobi-header-search :is(input, button):focus-visible {
+  outline-offset: -2px;
+}
+
+.sobi-site .sobi-header .sobi-header-hotline {
+  grid-area: phone;
+  gap: 8px;
+  width: auto;
+  margin: 0;
+  padding-block: 6px;
+}
+
+.sobi-header .sobi-header-hotline > .icon-phone {
+  flex-basis: 27px;
+  width: 27px;
+  height: 32px;
+  color: var(--sobi-orange);
+  font-size: 26px;
+}
+
+.sobi-hotline-copy {
+  display: grid;
+  gap: 1px;
+}
+
+.sobi-header .sobi-hotline-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.sobi-header .sobi-hotline-number {
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.sobi-header .sobi-header-quote {
+  grid-area: quote;
+  gap: 8px;
+  padding-block: 8px;
+  font-size: 14px;
+}
+
+.sobi-header .sobi-mobile-toggle {
+  display: none;
+  border-radius: 50%;
+}
+
+.sobi-header .sobi-mobile-menu,
+.sobi-header .sobi-header-quote--menu {
+  display: none;
+}
+
+@media (max-width: 1239px) {
+  .sobi-header .sobi-mainbar {
+    width: calc(100% - 48px);
+  }
+
+  .sobi-header .sobi-nav {
+    display: none;
+  }
+
+  .sobi-header .sobi-mobile-toggle {
+    display: inline-flex;
+  }
+
+  .sobi-header .sobi-mobile-menu:not([hidden]) {
+    display: block;
+    width: calc(100% - 48px);
+  }
+}
+
+@media (max-width: 874px) {
+  .sobi-business-topbar .sobi-shell {
+    width: calc(100% - 32px);
+  }
+
+  .sobi-business-topbar .sobi-business-info {
+    column-gap: 12px;
+  }
+
+  .sobi-business-topbar .sobi-business-info > * {
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  .sobi-business-topbar .sobi-business-info .sobi-business-delivery {
+    margin-inline-start: 0;
+  }
+
+  .sobi-header .sobi-mainbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "navigation navigation"
+      "search phone";
+    width: calc(100% - 32px);
+    gap: 8px;
+    padding-block: 8px 12px;
+  }
+
+  .sobi-header-nav {
+    gap: 8px;
+  }
+
+  .sobi-header .sobi-logo {
+    width: clamp(92px, 34vw, 116px);
+    max-width: 100%;
+    flex-shrink: 1;
+    margin-inline-end: auto;
+  }
+
+  .sobi-site .sobi-header .sobi-category-control > button {
+    padding-inline: 11px;
+  }
+
+  .sobi-header .sobi-mobile-toggle {
+    flex: 0 0 44px;
+  }
+
+  .sobi-site .sobi-header .sobi-header-hotline {
+    padding-inline: 10px;
+  }
+
+  .sobi-site .sobi-header .sobi-header-hotline > .icon-phone {
+    flex-basis: 24px;
+    width: 24px;
+    font-size: 23px;
+  }
+
+  .sobi-header .sobi-hotline-number {
+    font-size: 14px;
+  }
+
+  .sobi-header .sobi-mainbar > .sobi-header-quote {
+    display: none;
+  }
+
+  .sobi-header .sobi-header-quote--menu {
+    display: inline-flex;
+    margin-top: 8px;
+  }
+
+  .sobi-header .sobi-mobile-menu:not([hidden]) {
+    width: calc(100% - 32px);
+  }
+}
+
+@media (max-width: 359px) {
+  .sobi-business-topbar .sobi-shell,
+  .sobi-header .sobi-mainbar,
+  .sobi-header .sobi-mobile-menu:not([hidden]) {
+    width: calc(100% - 20px);
+  }
+
+  .sobi-site .sobi-header .sobi-header-hotline {
+    gap: 6px;
+    padding-inline: 8px;
+  }
+
+  .sobi-site .sobi-header .sobi-header-hotline > .icon-phone {
+    flex-basis: 19px;
+    width: 19px;
+    font-size: 19px;
+  }
+
+  .sobi-header .sobi-hotline-number {
+    font-size: 13px;
+  }
+
+  .sobi-site .sobi-header-search input[type="search"] {
+    padding-inline-start: 10px;
+    font-size: 13px;
+  }
+}

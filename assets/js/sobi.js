@@ -91,7 +91,7 @@
     (event) => {
       if (event.pointerType === "mouse" || !event.isPrimary) return;
       clearCardPress();
-      const element = event.target.closest(".sobi-picks .sobi-product-card, .sobi-hero-explore, .sobi-hero-custom, .sobi-mega .sobi-text-link");
+      const element = event.target.closest(".sobi-picks .sobi-product-card, .sobi-hero-quote, .sobi-hero-custom, .sobi-mega .sobi-text-link");
       if (!element) return;
       pressedCard = {
         element,

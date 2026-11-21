@@ -164,6 +164,8 @@
   .sobi-mega-applications.sobi-mega-gallery { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .sobi-mega-photo { display: none; }
   .sobi-hero .sobi-hero-copy > .col-inner { max-width: none; }
+  /* Flatsome's empty clearfix becomes an extra item in the stacked hero. */
+  .sobi-site .sobi-hero.sobi-hero-video > .section-content > .sobi-hero-layout::after { content: none; }
   .sobi-quote-intro { padding-right: 0; }
 }
 @media (max-width: 849px) {

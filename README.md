@@ -51,7 +51,9 @@ Trang Blog nguồn có phần danh sách trống tại thời điểm xuất l�
 
 Lần xuất ban đầu thiếu thông tin liên hệ trong header/footer. Ngày 21/11/2026, cả 60 trang HTML đã nhận email, địa chỉ, hotline và liên kết mạng xã hội từ phần công khai của WordPress local.
 
-Khi các mục liên hệ được cập nhật trong WordPress, chạy `python tools/export_demo.py --contacts-only` từ repo demo để làm mới header/footer trên mọi trang. Lệnh đọc trang chủ công khai của WordPress tại `sobi-packaging.test`; các nội dung trang, dữ liệu tìm kiếm và hành vi form mô phỏng được giữ theo bản demo.
+Đợt rà soát ngày 21/11/2026 đồng bộ header, footer và liên hệ nhanh trên 60 trang. Trang chủ có nút báo giá nhanh, hiệu ứng ở phần chữ của thẻ mẫu túi và bốn bước quy trình. Cả hai form báo giá dùng gợi ý nhập từ website nguồn.
+
+Chạy `python tools/export_demo.py --sync-audit` để cập nhật các phần này từ các trang công khai tại `sobi-packaging.test`. Lệnh `python tools/export_demo.py --contacts-only` làm mới riêng thông tin liên hệ trong các thành phần dùng chung. Hai lệnh cần Python 3.10 trở lên và beautifulsoup4.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
 

@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 export_mode = parser.add_mutually_exclusive_group()
 export_mode.add_argument('--only', action='append', default=[], help='Export this route only; repeat for a batch. Preserve other page bodies and existing catalogue/blog data.')
 export_mode.add_argument('--contacts-only', action='store_true', help='Refresh shared contact blocks from the public WordPress homepage.')
+export_mode.add_argument('--sync-audit', action='store_true', help='Refresh the shared layout, homepage and public quote form hints.')
 args = parser.parse_args()
 selected_routes = set(args.only)
 
@@ -25,12 +26,17 @@ THEME = RUNTIME / 'wp-content/themes/sobi-flatsome/assets'
 MARKER = '__SOBI_ROOT__'
 MEDIA = set()
 
-def fetch(url):
+def fetch_bytes(url, allow_404=False):
     try:
-        with urlopen(url, timeout=30) as response: return response.read().decode('utf-8')
+        with urlopen(url, timeout=30) as response:
+            return response.read()
     except HTTPError as error:
-        if error.code == 404: return error.read().decode('utf-8')
+        if allow_404 and error.code == 404:
+            return error.read()
         raise
+
+def fetch(url):
+    return fetch_bytes(url, allow_404=True).decode('utf-8')
 
 def api(endpoint):
     return json.loads(fetch(SITE+'wp-json/wp/v2/'+endpoint+'?per_page=100'))
@@ -38,13 +44,16 @@ def api(endpoint):
 def soup(text): return BeautifulSoup(text, 'html.parser')
 
 
+def render_static_html(doc):
+    # Reparse after moving fragments so adjacent whitespace is serialized consistently.
+    return str(soup(re.sub(r'(?m)^[ \t]+$', '', str(doc))))
+
+
 def refresh_public_contacts():
     """Update shared contact markup without re-exporting pages or assets."""
     selectors = (
         '#header .sobi-business-info',
-        '#header .sobi-business-topbar .sobi-top-social',
-        '#header .sobi-header-hotline--mainbar',
-        '#header .sobi-header-hotline--mobile',
+        '#header .sobi-header-hotline',
         '#footer .sobi-footer-contact',
         '#footer .sobi-footer-social',
     )
@@ -67,14 +76,16 @@ def refresh_public_contacts():
     for output in sorted(OUT.rglob('*.html')):
         raw = output.read_text(encoding='utf-8')
         doc = soup(raw)
-        if doc.select_one('meta[name="sobi-route"]') is None:
+        route_meta = doc.select_one('meta[name="sobi-route"]')
+        if route_meta is None:
             continue
         for selector, fragment in fragments.items():
             block = doc.select_one(selector)
             if block is None:
                 raise RuntimeError(f'Missing contact block in {output}: {selector}')
             block.replace_with(soup(fragment).find())
-        rendered = str(doc)
+        sync_quick_contacts(doc, homepage, route_meta['content'])
+        rendered = render_static_html(doc)
         if raw != rendered:
             updated[output] = rendered
     for output, rendered in updated.items():
@@ -82,41 +93,21 @@ def refresh_public_contacts():
     print(f'Updated contact markup on {len(updated)} pages.')
 
 
-if args.contacts_only:
-    refresh_public_contacts()
-    raise SystemExit(0)
-
-
 def route(url): return unquote(urlsplit(url).path.removeprefix('/sobi-packaging/')).strip('/')+'/' if urlsplit(url).path.removeprefix('/sobi-packaging/').strip('/') else ''
 
-pages=api('pages'); posts=api('posts'); categories=api('categories')
-categories=[c for c in categories if c['slug']!='uncategorized']
-seed=['san-pham/','san-pham/?trang=2']+[route(c['link']) for c in categories]
-with ThreadPoolExecutor(max_workers=4) as pool:
-    seed_html=dict(zip(seed,pool.map(lambda p:fetch(SITE+p),seed)))
-product_cards=[]
-for key in seed[:2]: product_cards+=soup(seed_html[key]).select('.sobi-product-card')
-product_routes=list(dict.fromkeys(route(c.select_one('a')['href']) for c in product_cards))
-base_routes=list(dict.fromkeys([route(p['link']) for p in pages]+product_routes+[route(p['link']) for p in posts]+[route(c['link']) for c in categories]))
-with ThreadPoolExecutor(max_workers=5) as pool:
-    documents=dict(zip(base_routes,pool.map(lambda p:fetch(SITE+p),base_routes)))
-error_html=fetch(SITE+'sobi-demo-missing-page/')
-documents['404.html']=error_html
-known=set(base_routes)|{'search/'}
-if selected_routes - known:
-    raise RuntimeError('Unknown export routes: '+', '.join(sorted(selected_routes - known)))
+PUBLIC_THEME = 'wp-content/themes/sobi-flatsome/assets/'
+STYLE_FILES = ['assets/css/base.css', 'assets/css/tables.css', 'assets/theme/sobi.css',
+               'assets/theme/conversion.css', 'assets/theme/header-audit.css',
+               'assets/theme/quick-contact.css', 'assets/theme/home-audit.css', 'assets/css/demo.css']
+SCRIPT_FILES = ['assets/js/data.js', 'assets/js/sobi.js', 'assets/theme/quick-contact.js', 'assets/js/demo.js']
 
-# Sobi assets only: no Flatsome parent runtime, WordPress JS or admin files.
-shutil.copytree(THEME, OUT/'assets/theme', dirs_exist_ok=True, ignore=shutil.ignore_patterns('sobi.js','.DS_Store'))
-(OUT/'assets/theme/sobi.js').unlink(missing_ok=True)
-shutil.copyfile(RUNTIME/'wp-content/plugins/sobi-tables/assets/tables.css',OUT/'assets/css/tables.css')
-js=(THEME/'sobi.js').read_text()
-start=js.index("    form.addEventListener('submit', async (event) => {")
-end=js.index('    if (inBuilder) {',start)
-js=js[:start]+"    // Demo submissions are handled by demo.js without a network request.\n"+js[end:]
-# Share the actual demo URL, including a GitHub project subpath.
-js=js.replace('navigator.clipboard.writeText(button.dataset.copyUrl)', 'navigator.clipboard.writeText(location.href.split("?")[0])')
-(OUT/'assets/js/sobi.js').write_text(js)
+
+def make_demo_script(js):
+    start = js.index("    form.addEventListener('submit', async (event) => {")
+    end = js.index('    if (inBuilder) {', start)
+    js = js[:start] + '    // Demo submissions are handled by demo.js without a network request.\n' + js[end:]
+    return js.replace('navigator.clipboard.writeText(button.dataset.copyUrl)',
+                      'navigator.clipboard.writeText(location.href.split("?")[0])')
 
 def relative_root(path):
     if path=='404.html' or not path:return './'
@@ -131,10 +122,15 @@ def local_asset(url):
     if '/wp-content/uploads/' in path:
         suffix=path.split('/wp-content/uploads/',1)[1]
         source=RUNTIME/'wp-content/uploads'/suffix
-        if not source.is_file(): raise RuntimeError(f'Missing public media: {suffix}')
         target=OUT/'assets/media'/suffix
-        target.parent.mkdir(parents=True,exist_ok=True)
-        if not target.exists(): shutil.copyfile(source,target)
+        if not target.exists():
+            target.parent.mkdir(parents=True,exist_ok=True)
+            if source.is_file():
+                shutil.copyfile(source,target)
+            elif args.sync_audit:
+                target.write_bytes(fetch_bytes(SITE+'wp-content/uploads/'+quote(suffix,safe='/.-_')))
+            else:
+                raise RuntimeError(f'Missing public media: {suffix}')
         MEDIA.add('assets/media/'+suffix)
         return 'assets/media/'+suffix
     return None
@@ -165,7 +161,10 @@ def rewrite_url(url,path='',template=False):
     return result
 
 def rewrite_tree(tree,path='',template=False):
-    for tag in tree.find_all(True):
+    tags = tree.find_all(True)
+    if not isinstance(tree, BeautifulSoup):
+        tags.insert(0, tree)
+    for tag in tags:
         for attr in ['href','src','poster','action','data-video-src','data-copy-url']:
             if tag.has_attr(attr):tag[attr]=rewrite_url(tag[attr],path,template)
         if tag.has_attr('srcset'):
@@ -179,6 +178,185 @@ def rewrite_tree(tree,path='',template=False):
     for style in tree.find_all('style'):
         style.string=re.sub(r'url\([\'\"]?(.*?)[\'\"]?\)',lambda m:'url("'+rewrite_url(m.group(1),path,template)+'")',style.get_text())
     return tree
+
+
+def static_quote_forms(doc):
+    for form in doc.select('.sobi-quote-form'):
+        form['data-demo-form'] = 'quote'
+        form['action'] = '#'
+        form['method'] = 'get'
+        for field in form.select('input[type="hidden"]'):
+            field.unwrap()
+        for honeypot in form.select('.sobi-honeypot'):
+            honeypot.decompose()
+        form.select_one('[name="phone"]')['pattern'] = r'[+0-9 \(\)\-]{9,20}'
+        note = doc.new_tag('p', attrs={'class': 'sobi-demo-form-note'})
+        note.string = 'Bản demo: thông tin và file chỉ được xử lý trên thiết bị của bạn, không gửi đến Sobi.'
+        form.insert_before(note)
+
+
+def copy_quote_hints(doc, source):
+    for form, source_form in zip(doc.select('.sobi-quote-form'), source.select('.sobi-quote-form'), strict=True):
+        for field in source_form.select('[name][placeholder]'):
+            form.find(attrs={'name': field['name']})['placeholder'] = field['placeholder']
+        form.select_one('[name="province"] option[value=""]').string = source_form.select_one(
+            '[name="province"] option[value=""]').get_text()
+
+
+def stabilize_builder_ids(main):
+    """Give randomly generated homepage IDs stable names and keep their inline styles."""
+    ids = {}
+    for element in main.find_all(id=re.compile(r'^(section_|image_|row-|col-|text-)\d+$')):
+        source_id = element['id']
+        static_id = f'sobi-home-layout-{len(ids) + 1}'
+        ids[source_id] = static_id
+        element['id'] = static_id
+    for style in main.find_all('style'):
+        style.string = re.sub(r'#([\w-]+)', lambda match: '#' + ids.get(match[1], match[1]),
+                              style.get_text())
+
+
+def sync_quick_contacts(doc, source, path):
+    back_top = doc.select_one('[data-back-top]')
+    for old_bar in doc.select('.sobi-mobile-quote'):
+        old_bar.decompose()
+    for selector in ('[data-quick-desktop]', '[data-quick-mobile]'):
+        existing = doc.select_one(selector)
+        block = source.select_one(selector)
+        if block:
+            copy = rewrite_tree(soup(str(block)).find(), path)
+            if existing:
+                existing.replace_with(copy)
+            else:
+                back_top.insert_before(copy)
+                back_top.insert_before('\n')
+        elif existing:
+            existing.decompose()
+
+
+def versioned_asset(path, asset):
+    version = hashlib.sha256((OUT/asset).read_bytes()).hexdigest()[:12]
+    return relative_root(path) + asset + '?v=' + version
+
+
+def install_assets(doc, path):
+    icon = doc.head.select_one('link[rel="icon"]')
+    noscript = doc.body.find('noscript', recursive=False)
+    for asset in STYLE_FILES:
+        if asset.endswith('home-audit.css') and path:
+            continue
+        link = doc.new_tag('link', rel='stylesheet', href=versioned_asset(path, asset))
+        if icon:
+            icon.insert_before(link)
+        else:
+            doc.head.append(link)
+    for asset in SCRIPT_FILES:
+        script = doc.new_tag('script', src=versioned_asset(path, asset), defer='')
+        if noscript:
+            noscript.insert_before(script)
+        else:
+            doc.body.append(script)
+
+
+def sync_public_audit():
+    """Update the audited public UI using the export's existing route map."""
+    exports = {}
+    for output in sorted(OUT.rglob('*.html')):
+        doc = soup(output.read_text(encoding='utf-8'))
+        route_meta = doc.select_one('meta[name="sobi-route"]')
+        if route_meta:
+            exports[route_meta['content']] = (output, doc)
+    known.update(exports)
+    # Share the homepage chrome on the demo-only search page.
+    sources = {
+        path: {'search/': '', '404.html': 'sobi-demo-missing-page/'}.get(path, path)
+        for path in exports
+    }
+    source_paths = list(dict.fromkeys(sources.values()))
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        snapshots = dict(zip(source_paths, pool.map(lambda path: soup(fetch(SITE+path)), source_paths)))
+
+    for name in ('sobi.css', 'conversion.css', 'header-audit.css', 'quick-contact.css',
+                 'home-audit.css', 'quick-contact.js', 'sobi.js'):
+        content = fetch_bytes(SITE+PUBLIC_THEME+name)
+        if name == 'sobi.js':
+            (OUT/'assets/js/sobi.js').write_bytes(make_demo_script(content.decode('utf-8')).encode('utf-8'))
+        else:
+            (OUT/'assets/theme'/name).write_bytes(content.rstrip() + b'\n')
+
+    # Homepage snippets should reflect the audited page in site-wide search.
+    data_file = OUT/'assets/js/data.js'
+    data = json.loads(data_file.read_text(encoding='utf-8').split(' = ', 1)[1].rstrip(';\n'))
+    native_main = snapshots[''].select_one('main')
+    homepage = next(entry for entry in data['search'] if entry['route'] == '')
+    homepage['title'] = native_main.select_one('h1').get_text(' ', strip=True)
+    homepage['text'] = native_main.get_text(' ', strip=True)[:25000]
+    data_file.write_bytes(('window.SOBI_DATA = ' + json.dumps(data, ensure_ascii=False).replace('<', '\\u003c') + ';\n').encode('utf-8'))
+
+    rendered = {}
+    for path, (output, doc) in exports.items():
+        source = snapshots[sources[path]]
+        for selector in ('#header', '#footer'):
+            source_node = source.select_one(selector)
+            if source_node is None:
+                raise RuntimeError(f'Missing {selector} on public route {path}')
+            fragment = soup(str(source_node)).find()
+            doc.select_one(selector).replace_with(rewrite_tree(fragment, path))
+        sync_quick_contacts(doc, source, path)
+
+        if path == '':
+            main = source.select_one('main')
+            for tag in main.select('script, #wpadminbar, #main-menu, .post-edit-link, link, meta'):
+                tag.decompose()
+            static_quote_forms(source)
+            stabilize_builder_ids(main)
+            doc.select_one('main').replace_with(rewrite_tree(main, path))
+        elif path == 'lien-he/':
+            copy_quote_hints(doc, source)
+        for tag in doc.select('head link[rel="stylesheet"], script[src]'):
+            tag.decompose()
+        install_assets(doc, path)
+        rendered[output] = render_static_html(doc)
+
+    for output, html in rendered.items():
+        output.write_bytes(html.encode('utf-8'))
+    print(f'Synchronized the public audit across {len(exports)} pages.')
+
+
+known = set()
+if args.contacts_only:
+    known.update(json.loads((OUT/'docs/content-manifest.json').read_text(encoding='utf-8'))['pages'])
+    known = {path.removesuffix('index.html') for path in known}
+    refresh_public_contacts()
+    raise SystemExit(0)
+if args.sync_audit:
+    sync_public_audit()
+    raise SystemExit(0)
+
+
+pages=api('pages'); posts=api('posts'); categories=api('categories')
+categories=[c for c in categories if c['slug']!='uncategorized']
+seed=['san-pham/','san-pham/?trang=2']+[route(c['link']) for c in categories]
+with ThreadPoolExecutor(max_workers=4) as pool:
+    seed_html=dict(zip(seed,pool.map(lambda p:fetch(SITE+p),seed)))
+product_cards=[]
+for key in seed[:2]: product_cards+=soup(seed_html[key]).select('.sobi-product-card')
+product_routes=list(dict.fromkeys(route(c.select_one('a')['href']) for c in product_cards))
+base_routes=list(dict.fromkeys([route(p['link']) for p in pages]+product_routes+[route(p['link']) for p in posts]+[route(c['link']) for c in categories]))
+with ThreadPoolExecutor(max_workers=5) as pool:
+    documents=dict(zip(base_routes,pool.map(lambda p:fetch(SITE+p),base_routes)))
+error_html=fetch(SITE+'sobi-demo-missing-page/')
+documents['404.html']=error_html
+known=set(base_routes)|{'search/'}
+if selected_routes - known:
+    raise RuntimeError('Unknown export routes: '+', '.join(sorted(selected_routes - known)))
+
+# Sobi assets only: no Flatsome parent runtime, WordPress JS or admin files.
+shutil.copytree(THEME, OUT/'assets/theme', dirs_exist_ok=True, ignore=shutil.ignore_patterns('sobi.js','.DS_Store'))
+(OUT/'assets/theme/sobi.js').unlink(missing_ok=True)
+shutil.copyfile(RUNTIME/'wp-content/plugins/sobi-tables/assets/tables.css',OUT/'assets/css/tables.css')
+js = make_demo_script((THEME/'sobi.js').read_text(encoding='utf-8'))
+(OUT/'assets/js/sobi.js').write_bytes(js.encode('utf-8'))
 
 # Gather cards from every category, so the Blog demo remains complete even if
 # the source Blog shortcode currently has an empty context on its landing page.
@@ -233,9 +411,6 @@ for r,raw in documents.items():
     head.append(doc.new_tag('meta',attrs={'name':'description','content':description}))
     head.append(doc.new_tag('meta',attrs={'name':'sobi-root','content':relative_root(r)}))
     head.append(doc.new_tag('meta',attrs={'name':'sobi-route','content':r}))
-    for css in ['assets/css/base.css','assets/css/tables.css','assets/theme/sobi.css','assets/theme/conversion.css','assets/css/demo.css']:
-        version = hashlib.sha256((OUT/css).read_bytes()).hexdigest()[:12]
-        head.append(doc.new_tag('link',rel='stylesheet',href=relative_root(r)+css+'?v='+version))
     head.append(doc.new_tag('link',rel='icon',href=relative_root(r)+'assets/theme/images/sobi-site-icon.png'))
     if r=='404.html':
         bootstrap=doc.new_tag('script')
@@ -245,30 +420,6 @@ for r,raw in documents.items():
     doc.head.replace_with(head)
     doc.html['lang']='vi'
     doc.body['class']=list(doc.body.get('class',[]))+['sobi-static-demo']
-    # Reuse the public channels already present in the homepage content when
-    # migrated Settings happen to render empty in the source header/footer.
-    public_home=soup(documents[''])
-    channels={}
-    for anchor in public_home.select('.sobi-social-section a[href]'):
-        value=anchor.get('href','')
-        for channel,host in [('facebook','facebook.com'),('shopee','shopee.vn'),('tiktok','tiktok.com')]:
-            if host in value:channels[channel]=value
-    labels={'facebook':'Facebook','shopee':'Shopee','tiktok':'TikTok'}
-    top=doc.select_one('.sobi-top-social')
-    if top is not None and not top.select('a'):
-        for channel,value in channels.items():
-            top.append(soup('<a class="sobi-top-social-'+channel+'" href="'+value+'" target="_blank" rel="noopener noreferrer" aria-label="'+labels[channel]+'"><span class="sobi-top-social-icon" aria-hidden="true"></span><span class="sobi-top-social-label" aria-hidden="true">'+labels[channel]+'</span></a>'))
-    # The hotline is explicitly documented and is already used by the Zalo CTA.
-    if not doc.select_one('.sobi-header-hotline'):
-        def hotline(placement):
-            return soup('<a class="sobi-header-hotline sobi-header-hotline--'+placement+'" href="tel:0708010662" aria-label="Hotline 0708 010 662"><i class="icon-phone" aria-hidden="true"></i><span class="sobi-hotline-label">Hotline:</span><span>0708 010 662</span></a>')
-        doc.select_one('.sobi-header-actions').insert(0,hotline('mainbar'))
-        doc.select_one('.sobi-business-topbar .sobi-shell').append(hotline('mobile'))
-    footer_social=doc.select_one('.sobi-footer-social')
-    if footer_social is not None and not footer_social.select('a'):
-        for channel,value in channels.items():
-            footer_social.append(soup('<a href="'+value+'" class="sobi-top-social-'+channel+'" target="_blank" rel="noopener noreferrer" aria-label="'+labels[channel]+'"><span class="sobi-top-social-icon" aria-hidden="true"></span></a>'))
-        footer_social.append(soup('<a href="https://zalo.me/0708010662" class="sobi-top-social-zalo" target="_blank" rel="noopener noreferrer" aria-label="Zalo"><span class="sobi-top-social-icon" aria-hidden="true"></span></a>'))
     for tag in doc.select('#wpadminbar, #main-menu, .post-edit-link, link, meta'):
         if tag.find_parent('head') is None:tag.decompose()
     # Rebuild missing Blog landing listing using public category card markup.
@@ -280,13 +431,7 @@ for r,raw in documents.items():
         avatar['src']=SITE+'wp-content/themes/sobi-flatsome/assets/images/sobi-logo.jpg'
         avatar.attrs.pop('srcset',None)
         avatar['alt']='Ảnh đại diện minh họa'
-    for form in doc.select('.sobi-quote-form'):
-        form['data-demo-form']='quote';form['action']='#';form['method']='get'
-        for hidden in form.select('input[type="hidden"]'):hidden.decompose()
-        for phone in form.select('[name="phone"]'):phone['pattern']=r'[+0-9 \(\)\-]{9,20}'
-        note=doc.new_tag('p',attrs={'class':'sobi-demo-form-note'})
-        note.string='Bản demo: thông tin và file chỉ được xử lý trên thiết bị của bạn, không gửi đến Sobi.'
-        form.insert_before(note)
+    static_quote_forms(doc)
     if r in post_by_route and not doc.select_one('#commentform'):
         article=doc.select_one('main article')
         if article:
@@ -318,9 +463,7 @@ for r,raw in documents.items():
         if 'facebook.com/sharer/' in anchor.get('href',''):
             anchor['data-demo-share']='facebook'
             anchor['href']='https://www.facebook.com/sharer/sharer.php'
-    for jsfile in ['data.js','sobi.js','demo.js']:
-        version=hashlib.sha256((OUT/'assets/js'/jsfile).read_bytes()).hexdigest()[:12]
-        doc.body.append(doc.new_tag('script',src=relative_root(r)+'assets/js/'+jsfile+'?v='+version,defer=''))
+    install_assets(doc, r)
     noscript=doc.new_tag('noscript');noscript.string='Bật JavaScript để dùng bộ lọc, menu và form mô phỏng. Nội dung trang vẫn có thể đọc trực tiếp.';doc.body.append(noscript)
     output=OUT/('404.html' if r=='404.html' else r+'index.html')
     output.parent.mkdir(parents=True,exist_ok=True);output.write_text(str(doc))
