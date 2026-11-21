@@ -189,7 +189,6 @@ def static_quote_forms(doc):
             field.unwrap()
         for honeypot in form.select('.sobi-honeypot'):
             honeypot.decompose()
-        form.select_one('[name="phone"]')['pattern'] = r'[+0-9 \(\)\-]{9,20}'
         note = doc.new_tag('p', attrs={'class': 'sobi-demo-form-note'})
         note.string = 'Bản demo: thông tin và file chỉ được xử lý trên thiết bị của bạn, không gửi đến Sobi.'
         form.insert_before(note)
@@ -197,8 +196,11 @@ def static_quote_forms(doc):
 
 def copy_quote_hints(doc, source):
     for form, source_form in zip(doc.select('.sobi-quote-form'), source.select('.sobi-quote-form'), strict=True):
-        for field in source_form.select('[name][placeholder]'):
-            form.find(attrs={'name': field['name']})['placeholder'] = field['placeholder']
+        for field in source_form.select('[name][placeholder], [name][pattern]'):
+            target = form.find(attrs={'name': field['name']})
+            for attribute in ('placeholder', 'pattern'):
+                if field.has_attr(attribute):
+                    target[attribute] = field[attribute]
         form.select_one('[name="province"] option[value=""]').string = source_form.select_one(
             '[name="province"] option[value=""]').get_text()
 
