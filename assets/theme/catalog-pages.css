@@ -427,9 +427,7 @@
 .sobi-category-content .sobi-related-term-card:not(:has(img)) .sobi-related-term-thumb {
   display: none;
 }
-.sobi-category-content .sobi-child-card:focus-visible,
-.sobi-category-content .sobi-product-card-link:focus-visible,
-.sobi-related-products .sobi-product-card-link:focus-visible {
+.sobi-category-content .sobi-child-card:focus-visible {
   outline: 2px solid var(--sobi-purple);
   outline-offset: 4px;
 }
@@ -440,10 +438,6 @@
 .sobi-product-card-link .sobi-product-image--empty {
   display: none;
 }
-:is(.sobi-category-content, .sobi-related-products) .sobi-product-card-link:hover img {
-  transform: none;
-}
-
 .sobi-detail-media > .sobi-gallery-open > i {
   inset: auto 16px 16px auto;
   display: grid;

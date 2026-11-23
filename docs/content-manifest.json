@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-23",
+  "generated": "2026-11-24",
   "source": "http://sobi-packaging.test/",
   "pages": [
     "404.html",
@@ -73,7 +73,7 @@
   "products": 9,
   "blog_posts": 18,
   "categories": 3,
-  "media_files": 85,
+  "media_files": 86,
   "video": [
     {
       "file": "assets/media/2026/11/sobi-san-xuat-1080p.mp4",

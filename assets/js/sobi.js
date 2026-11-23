@@ -139,7 +139,10 @@
     (event) => {
       if (event.pointerType === "mouse" || !event.isPrimary) return;
       clearCardPress();
-      const element = event.target.closest(".sobi-picks .sobi-product-card, .sobi-hero-quote, .sobi-hero-custom, .sobi-mega .sobi-text-link, .sobi-subcategory-jump nav a");
+      const element = event.target.closest(
+        ".sobi-product-card, .sobi-archive-related .sobi-archive-category-card, " +
+        ".sobi-hero-quote, .sobi-hero-custom, .sobi-mega .sobi-text-link, .sobi-subcategory-jump nav a",
+      );
       if (!element) return;
       pressedCard = {
         element,

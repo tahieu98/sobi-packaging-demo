@@ -96,43 +96,6 @@
   outline-offset: 3px;
 }
 
-.sobi-picks .sobi-product-card-info {
-  padding: 12px;
-  border-radius: 6px;
-  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
-}
-
-.sobi-picks .sobi-product-card-info .sobi-card-category {
-  margin-top: 0 !important;
-}
-
-.sobi-site .sobi-picks .sobi-product-card-info .sobi-text-link {
-  padding: 8px 12px;
-  border-radius: 5px;
-  background: var(--sobi-orange);
-  color: var(--sobi-purple);
-}
-
-.sobi-picks .sobi-product-card-link:hover img {
-  transform: none;
-}
-
-.sobi-picks .sobi-product-card-link:focus-visible {
-  outline: 2px solid var(--sobi-purple);
-  outline-offset: 4px;
-}
-
-.sobi-picks .sobi-product-card-link:is(:hover, :focus-visible, :active) .sobi-product-card-info,
-.sobi-picks .sobi-product-card.is-pressed .sobi-product-card-info {
-  transform: translateY(-4px);
-  background: var(--sobi-purple);
-}
-
-.sobi-site #main .sobi-picks .sobi-product-card-link:is(:hover, :focus-visible, :active) :is(h3, .sobi-card-category, .sobi-card-meta),
-.sobi-site #main .sobi-picks .sobi-product-card.is-pressed :is(h3, .sobi-card-category, .sobi-card-meta) {
-  color: #fff;
-}
-
 .sobi-site .sobi-steps-row > .col > .col-inner {
   background: #fff;
   border: 1px solid #e6deec;
@@ -164,17 +127,6 @@
 
 .sobi-steps-row .sobi-step-icon i {
   color: #a6430f;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sobi-picks .sobi-product-card-info {
-    transition: none;
-  }
-
-  .sobi-picks .sobi-product-card-link:is(:hover, :focus-visible, :active) .sobi-product-card-info,
-  .sobi-picks .sobi-product-card.is-pressed .sobi-product-card-info {
-    transform: none;
-  }
 }
 
 .sobi-site .sobi-completed-products {

@@ -354,7 +354,7 @@ def sync_catalogue():
     with ThreadPoolExecutor(max_workers=5) as pool:
         snapshots = dict(zip(paths, pool.map(lambda path: soup(fetch_bytes(SITE + path)), paths)))
 
-    for name in ('sobi.css', 'conversion.css', 'product-category.css', 'catalog-pages.css',
+    for name in ('sobi.css', 'conversion.css', 'home-audit.css', 'product-category.css', 'catalog-pages.css',
                  'category-archive.css', 'ux-layouts.css', 'category-archive.js', 'sobi.js'):
         content = fetch_bytes(SITE + PUBLIC_THEME + name)
         if name == 'sobi.js':

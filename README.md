@@ -2,7 +2,7 @@
 
 [**Xem demo online**](https://tahieu98.github.io/sobi-packaging-demo/) · [Repository](https://github.com/tahieu98/sobi-packaging-demo)
 
-Bản mô phỏng giao diện công khai của Sobi Packaging, đồng bộ danh mục và sản phẩm theo Order 32 ngày 23/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
+Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 ngày 24/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
 
 ## Mở bản demo
 
@@ -61,6 +61,8 @@ Chạy `python tools/export_demo.py --sync-audit` để cập nhật các phần
 
 Order 32 đồng bộ 35 trang catalogue và sản phẩm, gồm danh mục Túi giấy kraft, phụ kiện điện thoại, F&B và các mẫu SDD02, TCS02, SM01. Danh mục cấp cha lấy nhóm lọc từ dữ liệu công khai hiện có tại thời điểm xuất. Các lựa chọn giá phụ thuộc bảng giá WooCommerce.
 
+Order 33 cập nhật viền khối giới thiệu, nút Zalo, tiêu đề và các nhóm trong bộ lọc. Thẻ danh mục con xếp ảnh bên trái ở mọi kích thước. Danh mục liên quan hiển thị ảnh có sẵn và đổi màu khi tương tác. Trang chủ, Sản phẩm, danh mục cha, danh mục thứ cấp và chi tiết dùng chung kiểu thẻ sản phẩm.
+
 Chạy `python tools/export_demo.py --sync-catalogue` để tái xuất từ WordPress local. Chế độ này đọc các trang, ảnh và mã giao diện công khai qua HTTP rồi lưu thành HTML, CSS và JavaScript.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
@@ -68,6 +70,8 @@ Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội
 Đây là bản copy độc lập. Website XAMPP, database và gói bàn giao không bị sửa. Bản demo được quản lý trong repository public riêng `tahieu98/sobi-packaging-demo`. Repository WordPress `tahieu98/sobi-packaging` tiếp tục private; dữ liệu/backend của website thật không được đưa sang đây.
 
 ## Kết quả kiểm tra
+
+Order 33 đã kiểm tra 67 trang và các liên kết tài nguyên dưới đường dẫn project. Chrome được dùng để kiểm tra bộ lọc, sắp xếp, chế độ danh sách, hộp thoại mobile và hiệu ứng thẻ bằng chuột, bàn phím và chạm ở các chiều rộng từ 320 đến 1440 px.
 
 Order 32 đã kiểm tra các tuyến catalogue ở 8 độ rộng trên Chrome, từ 320 đến 1.440 px. Đã thử bộ lọc, sắp xếp, menu, FAQ, phóng ảnh và điền sẵn nội dung báo giá dưới đường dẫn project.
 
