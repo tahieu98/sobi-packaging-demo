@@ -140,7 +140,8 @@
       if (event.pointerType === "mouse" || !event.isPrimary) return;
       clearCardPress();
       const element = event.target.closest(
-        ".sobi-product-card, .sobi-archive-related .sobi-archive-category-card, " +
+        ".sobi-product-card, .sobi-archive-subcats[aria-label=\"Danh mục con\"] .sobi-archive-category-card, " +
+        ".sobi-archive-related .sobi-archive-category-card, " +
         ".sobi-hero-quote, .sobi-hero-custom, .sobi-mega .sobi-text-link, .sobi-subcategory-jump nav a",
       );
       if (!element) return;

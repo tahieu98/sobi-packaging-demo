@@ -2,7 +2,7 @@
 
 [**Xem demo online**](https://tahieu98.github.io/sobi-packaging-demo/) · [Repository](https://github.com/tahieu98/sobi-packaging-demo)
 
-Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 ngày 24/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
+Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 và Order 35 ngày 24/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
 
 ## Mở bản demo
 
@@ -62,6 +62,8 @@ Chạy `python tools/export_demo.py --sync-audit` để cập nhật các phần
 Order 32 đồng bộ 35 trang catalogue và sản phẩm, gồm danh mục Túi giấy kraft, phụ kiện điện thoại, F&B và các mẫu SDD02, TCS02, SM01. Danh mục cấp cha lấy nhóm lọc từ dữ liệu công khai hiện có tại thời điểm xuất. Các lựa chọn giá phụ thuộc bảng giá WooCommerce.
 
 Order 33 cập nhật viền khối giới thiệu, nút Zalo, tiêu đề và các nhóm trong bộ lọc. Thẻ danh mục con xếp ảnh bên trái ở mọi kích thước. Danh mục liên quan hiển thị ảnh có sẵn và đổi màu khi tương tác. Trang chủ, Sản phẩm, danh mục cha, danh mục thứ cấp và chi tiết dùng chung kiểu thẻ sản phẩm.
+
+Order 35 đổi trạng thái tương tác của thẻ danh mục con sang nền cam và chữ tím. Trạng thái này áp dụng cho hover, focus và chạm. Dòng Xem danh mục được bỏ khỏi các thẻ danh mục con.
 
 Chạy `python tools/export_demo.py --sync-catalogue` để tái xuất từ WordPress local. Chế độ này đọc các trang, ảnh và mã giao diện công khai qua HTTP rồi lưu thành HTML, CSS và JavaScript.
 

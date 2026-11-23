@@ -211,6 +211,19 @@
   color: #fff;
   font-size: 14px;
   line-height: 1.35;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+.sobi-site .sobi-archive-subcats[aria-label="Danh mục con"] .sobi-archive-category-card:is(:focus-visible, :active, .is-pressed) {
+  border-color: var(--sobi-orange, #f26921);
+  background: var(--sobi-orange, #f26921);
+  color: var(--archive-ink);
+}
+@media (hover: hover) {
+  .sobi-site .sobi-archive-subcats[aria-label="Danh mục con"] .sobi-archive-category-card:hover {
+    border-color: var(--sobi-orange, #f26921);
+    background: var(--sobi-orange, #f26921);
+    color: var(--archive-ink);
+  }
 }
 .sobi-site .sobi-archive-related .sobi-archive-category-card {
   background: #fff;
@@ -397,6 +410,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sobi-archive-actions .sobi-archive-contact,
+  .sobi-site .sobi-archive .sobi-archive-category-card,
   .sobi-site .sobi-archive-related .sobi-archive-category-card { transition: none; }
 }
 
