@@ -3,13 +3,48 @@
   const inBuilder = new URLSearchParams(location.search).has('uxb_iframe');
   if (inBuilder) document.body.classList.add('sobi-builder-preview');
   const showVideoStatus = (container, message) => {
-    const status = container.parentElement.querySelector('.sobi-video-status');
+    const status = container.parentElement?.querySelector('.sobi-video-status');
     if (status) { status.textContent = message; status.hidden = !message; }
   };
+  const getAllowedVideoUrl = (raw, provider) => {
+    if (typeof raw !== 'string' || !raw) return null;
+    let url;
+    try { url = new URL(raw); }
+    catch { return null; }
+    if (url.username || url.password || !['http:', 'https:'].includes(url.protocol)) return null;
+    if (provider === 'facebook') {
+      if (url.protocol !== 'https:' || url.port || url.hostname !== 'www.facebook.com' || url.pathname !== '/plugins/video.php') return null;
+      let reel;
+      try { reel = new URL(url.searchParams.get('href')); }
+      catch { return null; }
+      if (reel.protocol !== 'https:' || reel.port || reel.username || reel.password || reel.hostname !== 'www.facebook.com' || !/^\/reel\/[0-9]{5,30}\/$/.test(reel.pathname)) return null;
+      const embed = new URL('https://www.facebook.com/plugins/video.php');
+      embed.searchParams.set('href', reel.origin + reel.pathname);
+      embed.searchParams.set('show_text', 'false');
+      return embed;
+    }
+    if (provider === 'youtube') {
+      return url.protocol === 'https:' && !url.port && url.hostname === 'www.youtube-nocookie.com' && /^\/embed\/[A-Za-z0-9_-]{11}$/.test(url.pathname)
+        ? new URL(url.origin + url.pathname + '?autoplay=1&rel=0') : null;
+    }
+    if (provider === 'mp4') {
+      const localHttp = url.protocol === 'http:'
+        && url.origin === location.origin
+        && (location.hostname.endsWith('.test') || ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname));
+      return (url.protocol === 'https:' || localHttp) && /\.mp4$/i.test(url.pathname) ? url : null;
+    }
+    return null;
+  };
   const activateVideo = (container, automatic = false) => {
-    if (!container.querySelector('.sobi-video-play')) return;
+    if (!container || !container.querySelector('.sobi-video-play')) return;
     const poster = container.querySelector('img')?.currentSrc;
-    if (container.dataset.videoProvider === 'mp4') {
+    const provider = container.dataset.videoProvider;
+    const source = getAllowedVideoUrl(container.dataset.videoSrc, provider);
+    if (!source) {
+      showVideoStatus(container, 'Liên kết video không hợp lệ.');
+      return;
+    }
+    if (provider === 'mp4') {
       const video = document.createElement('video');
       video.controls = true;
       video.playsInline = true;
@@ -28,7 +63,7 @@
         showVideoStatus(container, 'Không thể tải video. Bạn có thể mở video bằng liên kết bên dưới.');
       });
       container.replaceChildren(video);
-      video.src = container.dataset.videoSrc;
+      video.src = source.href;
       const started = video.play();
       started?.catch(() => {
         if (container.dataset.videoState === 'error') return;
@@ -38,7 +73,7 @@
       if (!automatic) video.focus({ preventScroll: true });
     } else {
       const iframe = document.createElement('iframe');
-      const url = new URL(container.dataset.videoSrc);
+      const url = source;
       if (url.hostname === 'www.facebook.com') {
         url.searchParams.set('width', Math.max(220, Math.round(container.getBoundingClientRect().width)));
         url.searchParams.set('height', Math.round(container.getBoundingClientRect().height));
@@ -61,15 +96,28 @@
   });
   const scheduleVideos = () => {
     if (inBuilder || matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData) return;
-    document.querySelectorAll('[data-sobi-video][data-video-autoplay="true"]').forEach((container) => {
-      const delay = Math.max(2000, Math.min(10000, Number(container.dataset.videoDelay) || 2500));
-      setTimeout(() => {
-        if (document.visibilityState === 'visible') activateVideo(container, true);
-        else document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible') activateVideo(container, true);
-        }, { once: true });
-      }, delay);
+    if (!('IntersectionObserver' in window)) return; // Keep click-to-play available.
+    const ready = new Set();
+    const visible = new Set();
+    const maybePlay = (container) => {
+      if (document.visibilityState !== 'visible' || !ready.has(container) || !visible.has(container)) return;
+      observer.unobserve(container);
+      ready.delete(container);
+      visible.delete(container);
+      activateVideo(container, true);
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(({target, isIntersecting}) => {
+        if (isIntersecting) { visible.add(target); maybePlay(target); }
+        else visible.delete(target);
+      });
     });
+    document.querySelectorAll('[data-sobi-video][data-video-autoplay="true"]').forEach((container) => {
+      observer.observe(container);
+      const delay = Math.max(2000, Math.min(10000, Number(container.dataset.videoDelay) || 2500));
+      setTimeout(() => { ready.add(container); maybePlay(container); }, delay);
+    });
+    document.addEventListener('visibilitychange', () => ready.forEach(maybePlay));
   };
   if (document.readyState === 'complete') scheduleVideos();
   else window.addEventListener('load', scheduleVideos, { once: true });
@@ -91,7 +139,7 @@
     (event) => {
       if (event.pointerType === "mouse" || !event.isPrimary) return;
       clearCardPress();
-      const element = event.target.closest(".sobi-picks .sobi-product-card, .sobi-hero-quote, .sobi-hero-custom, .sobi-mega .sobi-text-link");
+      const element = event.target.closest(".sobi-picks .sobi-product-card, .sobi-hero-quote, .sobi-hero-custom, .sobi-mega .sobi-text-link, .sobi-subcategory-jump nav a");
       if (!element) return;
       pressedCard = {
         element,
@@ -214,12 +262,15 @@
   });
   const gallery = document.querySelector(".sobi-gallery");
   let galleryOpener = null;
-  document
-    .querySelector("[data-gallery-open]")
-    ?.addEventListener("click", (event) => {
-      galleryOpener = event.currentTarget;
+  document.querySelectorAll("[data-gallery-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      galleryOpener = button;
+      gallery?.querySelectorAll("[data-gallery-image]").forEach((image) => {
+        image.hidden = image.dataset.galleryImage !== button.dataset.galleryOpen;
+      });
       gallery?.showModal();
     });
+  });
   document
     .querySelector("[data-gallery-close]")
     ?.addEventListener("click", () => gallery?.close());
@@ -243,6 +294,17 @@
         : "smooth",
     }),
   );
+  const categoryJumpLinks = [...document.querySelectorAll('.sobi-subcategory-jump nav a[href^="#"]')];
+  if (categoryJumpLinks.length) {
+    const updateCategoryJumpSelection = () => {
+      for (const link of categoryJumpLinks) {
+        if (link.hash && link.hash === location.hash) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    updateCategoryJumpSelection();
+    window.addEventListener('hashchange', updateCategoryJumpSelection);
+  }
   const megaTabs = [...document.querySelectorAll('[data-mega-tab]')];
   const selectMegaTab = (tab, focus = false) => {
     megaTabs.forEach((item) => {

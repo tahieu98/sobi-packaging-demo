@@ -1,0 +1,101 @@
+.sobi-layout {
+  --sobi-layout-surface: #fff;
+  --sobi-layout-ink: var(--sobi-purple, #2d1947);
+  --sobi-layout-radius: 14px;
+  --sobi-layout-padding: clamp(0px, 6vw, var(--sobi-layout-spacing, 32px));
+  --sobi-layout-gutter: min(4vw, calc(var(--sobi-layout-gap, 24px) / 2));
+  width: 100%;
+  max-width: var(--sobi-layout-width, 1240px);
+  margin-inline: auto;
+  padding: var(--sobi-layout-padding);
+  border-radius: var(--sobi-layout-radius);
+  background: var(--sobi-layout-surface);
+  color: var(--sobi-layout-ink);
+}
+
+.sobi-layout-tone-kraft {
+  --sobi-layout-surface: #f6eee2;
+}
+
+.sobi-layout-tone-plum {
+  --sobi-layout-surface: var(--sobi-purple, #2d1947);
+  --sobi-layout-ink: #fff;
+}
+
+.sobi-layout-shape-square {
+  --sobi-layout-radius: 0px;
+}
+
+.sobi-layout-shape-round {
+  --sobi-layout-radius: 28px;
+}
+
+.sobi-layout-align-center {
+  text-align: center;
+}
+
+.sobi-layout-align-end {
+  text-align: end;
+}
+
+.sobi-site .sobi-layout :is(h2, h3, h4) {
+  color: var(--sobi-layout-ink);
+}
+
+.sobi-layout > .row {
+  width: calc(100% + 2 * var(--sobi-layout-gutter));
+  max-width: none;
+  margin-inline: calc(-1 * var(--sobi-layout-gutter));
+  row-gap: calc(2 * var(--sobi-layout-gutter));
+}
+
+.sobi-layout > .row > .col {
+  padding: 0 var(--sobi-layout-gutter);
+}
+
+.sobi-layout-cards > .col > .col-inner {
+  height: 100%;
+  padding: clamp(14px, 3vw, 24px);
+  border: 1px solid #e5d9cb;
+  border-radius: var(--sobi-layout-radius);
+  background: var(--sobi-layout-surface);
+}
+
+.sobi-layout-tone-kraft > .sobi-layout-cards > .col > .col-inner {
+  background: #fff;
+}
+
+.sobi-layout :is(.sobi-layout-image .img-inner, .sobi-layout-image.uxb-no-content) {
+  border-radius: var(--sobi-layout-radius);
+  overflow: hidden;
+}
+
+.sobi-layout-ratio-square {
+  --sobi-layout-image-ratio: 1;
+}
+
+.sobi-layout-ratio-landscape {
+  --sobi-layout-image-ratio: 4 / 3;
+}
+
+.sobi-layout-ratio-wide {
+  --sobi-layout-image-ratio: 16 / 9;
+}
+
+.sobi-layout:not(.sobi-layout-ratio-natural) .sobi-layout-image .img-inner img {
+  width: 100%;
+  aspect-ratio: var(--sobi-layout-image-ratio);
+  object-fit: cover;
+}
+
+.sobi-site .sobi-layout .button {
+  background: var(--sobi-orange, #f26921);
+  color: var(--sobi-purple, #2d1947);
+  border-radius: 999px;
+}
+
+@media (max-width: 549px) {
+  .sobi-layout-mobile-media-first > .row > .sobi-layout-media {
+    order: -1;
+  }
+}

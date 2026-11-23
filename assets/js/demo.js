@@ -88,7 +88,8 @@
   }));
   document.querySelectorAll('.sobi-quote-form').forEach(form=>{
     const params=new URLSearchParams(location.search);
-    if (!params.get('ung-dung') && params.get('product')) form.elements.message.value=`Tôi quan tâm mẫu ${params.get('product').slice(0,200)}`;
+    const product = params.get('sobi_mau') || params.get('product');
+    if (!params.get('ung-dung') && product) form.elements.message.value=`Tôi quan tâm mẫu ${product.slice(0,200)}`;
     form.addEventListener('submit',event=>{
       event.preventDefault();
       const status=form.parentElement.querySelector('.sobi-message');

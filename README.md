@@ -2,7 +2,7 @@
 
 [**Xem demo online**](https://tahieu98.github.io/sobi-packaging-demo/) · [Repository](https://github.com/tahieu98/sobi-packaging-demo)
 
-Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật theo Order 24 ngày 21/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
+Bản mô phỏng giao diện công khai của Sobi Packaging, đồng bộ danh mục và sản phẩm theo Order 32 ngày 23/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
 
 ## Mở bản demo
 
@@ -17,10 +17,11 @@ Nhấp đúp `Start-Demo.command` để mở preview bằng Terminal trên macOS
 
 ## Nội dung và tương tác
 
-60 tệp HTML gồm 17 trang danh mục thứ cấp, các trang thông tin, 9 chi tiết mẫu túi, 18 bài Blog, 3 chuyên mục, trang tìm kiếm, 404 và hai trang mẫu cũ vốn đang public tại nguồn. Bản đồ đầy đủ ở `docs/content-manifest.json`.
+67 tệp HTML gồm các danh mục cha và danh mục thứ cấp, các trang thông tin, 9 chi tiết mẫu túi, 18 bài Blog, 3 chuyên mục, trang tìm kiếm, 404 và hai trang mẫu cũ vốn đang public tại nguồn. Bản đồ đầy đủ ở `docs/content-manifest.json`.
 
-- Header/mobile menu, danh mục 4 tab, điều khiển bằng phím/Escape, link social và nút về đầu trang.
+- Header/mobile menu, menu danh mục WooCommerce, điều khiển bằng phím/Escape, link social và nút về đầu trang.
 - Trang Sản phẩm: tìm tên/mã, tìm không dấu, lọc nhóm, phân trang 8 mẫu/trang và trạng thái rỗng.
+- Danh mục cấp cha có cột lọc trên PC, bảng lọc trên tablet và mobile, lưới 4/3/2 cột, sắp xếp và chế độ danh sách. Bộ lọc dùng dữ liệu catalogue đã xuất và chạy trong trình duyệt.
 - Chi tiết mẫu: phóng ảnh, thông số, FAQ, chia sẻ/copy link, CTA điền sẵn tên mẫu.
 - Giấy kraft: các anchor, bảng so sánh cuộn ngang trong khung và FAQ đóng/mở.
 - Blog: 18 bài, lọc chuyên mục, tìm nội dung, phân trang 6 bài/trang, mục lục, bài liên quan và chia sẻ.
@@ -38,6 +39,7 @@ Form báo giá chỉ dựng bản tóm tắt trên thiết bị, không gửi em
 - `assets/media/`: media công khai được trang tham chiếu, bao gồm MP4.
 - `assets/js/sobi.js`: tương tác giao diện từ dự án, đã bỏ gửi báo giá đến server.
 - `assets/js/demo.js`: bộ lọc/tìm/phân trang/form/bình luận mô phỏng.
+- `assets/js/category-archive.js` áp dụng bộ lọc danh mục cấp cha từ URL và các lựa chọn đã xuất cùng HTML.
 - `assets/js/data.js`: dữ liệu công khai của sản phẩm/bài viết/trang.
 - `tools/serve.py`: preview tùy chọn; `tools/export_demo.py`: công cụ tái xuất tùy chọn, cần beautifulsoup4 và website nguồn đang chạy.
 - `docs/github-pages-costs.md`: nghiên cứu chi phí và các phương án xuất bản.
@@ -57,13 +59,19 @@ Order 24 cập nhật dải thông điệp, form viền cam, bố cục tablet, 
 
 Chạy `python tools/export_demo.py --sync-audit` để cập nhật các phần này từ các trang công khai tại `sobi-packaging.test`. Lệnh `python tools/export_demo.py --contacts-only` làm mới riêng thông tin liên hệ trong các thành phần dùng chung. Hai lệnh cần Python 3.10 trở lên và beautifulsoup4.
 
+Order 32 đồng bộ 35 trang catalogue và sản phẩm, gồm danh mục Túi giấy kraft, phụ kiện điện thoại, F&B và các mẫu SDD02, TCS02, SM01. Danh mục cấp cha lấy nhóm lọc từ dữ liệu công khai hiện có tại thời điểm xuất. Các lựa chọn giá phụ thuộc bảng giá WooCommerce.
+
+Chạy `python tools/export_demo.py --sync-catalogue` để tái xuất từ WordPress local. Chế độ này đọc các trang, ảnh và mã giao diện công khai qua HTTP rồi lưu thành HTML, CSS và JavaScript.
+
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
 
 Đây là bản copy độc lập. Website XAMPP, database và gói bàn giao không bị sửa. Bản demo được quản lý trong repository public riêng `tahieu98/sobi-packaging-demo`. Repository WordPress `tahieu98/sobi-packaging` tiếp tục private; dữ liệu/backend của website thật không được đưa sang đây.
 
 ## Kết quả kiểm tra
 
-Xem [kết quả Order 24](docs/order-24.md#tái-xuất-và-kiểm-chứng) cho bố cục và tương tác hiện tại. Báo cáo ngày 17/11/2026 ghi lại 30 cặp đo desktop, tablet và mobile, gồm icon mũi tên, grid Liên hệ, bảng kraft, form và caption video. [Báo cáo so với WordPress](docs/layout-parity.md)
+Order 32 đã kiểm tra các tuyến catalogue ở 8 độ rộng trên Chrome, từ 320 đến 1.440 px. Đã thử bộ lọc, sắp xếp, menu, FAQ, phóng ảnh và điền sẵn nội dung báo giá dưới đường dẫn project.
+
+Xem [kết quả Order 24](docs/order-24.md#tái-xuất-và-kiểm-chứng) cho bố cục và tương tác trang chủ. Báo cáo ngày 17/11/2026 ghi lại 30 cặp đo desktop, tablet và mobile, gồm icon mũi tên, grid Liên hệ, bảng kraft, form và caption video. [Báo cáo so với WordPress](docs/layout-parity.md)
 
 - Order 8: 60 tệp HTML trả HTTP 200; đã kiểm tra 5.274 tham chiếu local, không có đích bị thiếu. 17 trang danh mục mới được kiểm tra trên WordPress/demo ở 390/768/1440px; xem [chi tiết](docs/subcategory-pages.md).
 - 12 trang đại diện × 390/768/1440 px: 36/36 lượt có một H1, không tràn ngang và không có ảnh hỏng được phát hiện.

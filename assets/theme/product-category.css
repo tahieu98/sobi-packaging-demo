@@ -1,0 +1,116 @@
+.sobi-category-intro {
+  display: grid;
+  gap: 32px;
+  align-items: center;
+}
+.sobi-category-intro .sobi-subcategory-visual img { width: 100%; }
+.sobi-category-content .sobi-category-section { padding-block: 28px; }
+.sobi-category-content .sobi-pagination .current { font-weight: 700; }
+
+.sobi-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+.sobi-cta-phone {
+  background: transparent;
+  color: var(--sobi-purple, #2d1947);
+  border: 1px solid var(--sobi-purple, #2d1947);
+}
+.sobi-hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sobi-hero-chips li {
+  padding: 6px 12px;
+  border: 1px solid var(--sobi-line, #e5e5e5);
+  border-radius: 999px;
+  font-size: var(--sobi-text-small, 14px);
+  color: var(--sobi-muted, #6d6872);
+}
+
+.sobi-child-grid,
+.sobi-related-term-grid {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: 1fr 1fr;
+}
+.sobi-child-card,
+.sobi-related-term-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 12px;
+  border: 1px solid var(--sobi-line, #e5e5e5);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  background: #fff;
+}
+.sobi-child-thumb,
+.sobi-related-term-thumb {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--sobi-soft, #f5f6f4);
+}
+.sobi-child-thumb img,
+.sobi-related-term-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sobi-child-name { font-weight: 600; color: var(--sobi-purple, #2d1947); }
+.sobi-child-count { font-size: var(--sobi-text-small, 14px); color: var(--sobi-muted, #6d6872); }
+
+.sobi-category-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.sobi-sort-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sobi-sort-form select {
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid var(--sobi-line, #e5e5e5);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.sobi-custom-callout {
+  margin-block: 28px;
+  max-width: var(--sobi-layout-width, 1240px);
+}
+.sobi-custom-callout .sobi-cta {
+  background: #fff;
+  color: var(--sobi-purple, #2d1947);
+}
+
+.sobi-category-seo { color: var(--sobi-ink, #302c35); }
+
+.sobi-related-products {
+  padding-block: 28px;
+}
+
+@media (min-width: 768px) {
+  .sobi-category-intro:has(.sobi-subcategory-visual) { grid-template-columns: 1fr 1fr; }
+  .sobi-child-grid { grid-template-columns: repeat(4, 1fr); }
+  .sobi-related-term-grid { grid-template-columns: repeat(4, 1fr); }
+}

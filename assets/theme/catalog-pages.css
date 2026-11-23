@@ -1,0 +1,461 @@
+/* Order 32: editorial packaging catalogue polish */
+.sobi-category-content {
+  background: #fbfaf8;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, #f0f4f1 0%, #f8f7f2 52%, #ede9f3 100%);
+  border-bottom: 1px solid rgba(45, 25, 71, .1);
+}
+.sobi-category-content .sobi-category-intro {
+  min-height: 470px;
+  padding-block: clamp(42px, 6vw, 88px);
+}
+.sobi-category-content .sobi-category-intro > div:first-child {
+  max-width: 600px;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-hero h1 {
+  max-width: 19ch;
+  margin-bottom: 18px;
+  letter-spacing: -.025em;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-hero .sobi-subcategory-lead {
+  max-width: 58ch;
+  color: #514a5b;
+  line-height: 1.7;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual {
+  position: relative;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual::after {
+  position: absolute;
+  z-index: -1;
+  right: -12%;
+  bottom: -10%;
+  width: 52%;
+  height: 46%;
+  border-radius: 50%;
+  background: rgba(242, 105, 33, .14);
+  content: "";
+  filter: blur(30px);
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual img {
+  border: 10px solid rgba(255, 255, 255, .76);
+  border-radius: 24px;
+  box-shadow: 0 22px 50px rgba(45, 25, 71, .13);
+}
+.sobi-category-content .sobi-hero-chips li {
+  border-color: rgba(45, 25, 71, .18);
+  background: rgba(255, 255, 255, .6);
+}
+.sobi-category-content .sobi-category-section {
+  padding-block: clamp(38px, 5vw, 76px);
+}
+.sobi-category-content .sobi-category-section > h2,
+.sobi-category-content .sobi-related-categories > h2 {
+  position: relative;
+  margin-bottom: 24px;
+  letter-spacing: -.02em;
+}
+.sobi-category-content .sobi-category-section > h2::after,
+.sobi-category-content .sobi-related-categories > h2::after {
+  display: block;
+  width: 42px;
+  height: 3px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: var(--sobi-orange, #f26921);
+  content: "";
+}
+.sobi-category-content .sobi-child-grid {
+  gap: 20px;
+}
+.sobi-category-content .sobi-child-card {
+  position: relative;
+  padding: 14px;
+  border-color: #ded9e4;
+  border-radius: 18px;
+  box-shadow: 0 8px 26px rgba(45, 25, 71, .04);
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+.sobi-category-content .sobi-child-card:hover,
+.sobi-category-content .sobi-child-card:focus-visible {
+  border-color: rgba(242, 105, 33, .65);
+  box-shadow: 0 14px 32px rgba(45, 25, 71, .12);
+  transform: translateY(-3px);
+}
+.sobi-category-content .sobi-child-thumb {
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background: #f1f0ed;
+}
+.sobi-category-content .sobi-child-thumb img {
+  object-fit: contain;
+}
+.sobi-category-content .sobi-child-name {
+  padding-inline: 2px;
+  font-size: 17px;
+  line-height: 1.45;
+}
+.sobi-category-content .sobi-child-count {
+  padding-inline: 2px;
+  color: #716a78;
+}
+.sobi-category-content .sobi-category-toolbar {
+  padding: 12px 16px;
+  border: 1px solid #e1dce6;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .8);
+}
+.sobi-category-content .sobi-sort-form select {
+  border-color: #cfc5d8;
+  color: var(--sobi-purple, #2d1947);
+}
+.sobi-category-content .sobi-custom-callout {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  box-shadow: 0 16px 34px rgba(45, 25, 71, .12);
+}
+.sobi-category-content .sobi-custom-callout::before {
+  position: absolute;
+  top: -80px;
+  right: 5%;
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 50%;
+  content: "";
+}
+.sobi-category-content .sobi-category-seo {
+  max-width: 850px;
+  margin-inline: auto;
+  color: #514a5b;
+}
+.sobi-category-content .sobi-related-categories {
+  background: #f4f1f7;
+}
+.sobi-category-content .sobi-related-term-card {
+  border-color: #ded9e4;
+  border-radius: 14px;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+.sobi-category-content .sobi-related-term-card:hover,
+.sobi-category-content .sobi-related-term-card:focus-visible {
+  border-color: var(--sobi-orange, #f26921);
+  background: #fff;
+  transform: translateY(-2px);
+}
+.sobi-product-detail {
+  padding-block: clamp(28px, 5vw, 72px);
+}
+.sobi-detail-grid {
+  align-items: center;
+  gap: clamp(36px, 6vw, 86px);
+  margin-top: 0;
+}
+.sobi-detail-media {
+  position: relative;
+}
+.sobi-detail-media:has(> .sobi-gallery-open)::before {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(242, 105, 33, .5);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+.sobi-detail-media .sobi-gallery-open {
+  overflow: hidden;
+  border: 1px solid #e4dfe7;
+  border-radius: 22px;
+  background: #f7f5ef;
+  box-shadow: 0 18px 40px rgba(45, 25, 71, .1);
+}
+.sobi-detail-media .sobi-gallery-open img {
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.sobi-gallery-thumbs .sobi-gallery-open {
+  overflow: hidden;
+  border: 1px solid #ded9e4;
+  border-radius: 10px;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.sobi-gallery-thumbs .sobi-gallery-open:hover,
+.sobi-gallery-thumbs .sobi-gallery-open:focus-visible {
+  border-color: var(--sobi-orange, #f26921);
+  transform: translateY(-2px);
+}
+.sobi-detail-copy {
+  max-width: 560px;
+}
+.sobi-detail-copy h1 {
+  max-width: 20ch;
+  letter-spacing: -.025em;
+}
+.sobi-detail-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+.sobi-detail-context a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid #ded9e4;
+  border-radius: 999px;
+  background: #f7f5fa;
+  color: var(--sobi-purple, #2d1947);
+  font-size: 13px;
+  text-decoration: none;
+}
+.sobi-detail-context a:hover,
+.sobi-detail-context a:focus-visible {
+  border-color: var(--sobi-orange, #f26921);
+}
+.sobi-detail-copy .sobi-detail-excerpt {
+  max-width: 52ch;
+  font-size: 17px;
+  line-height: 1.7;
+}
+.sobi-detail-copy .sobi-spec-list {
+  overflow: hidden;
+  border: 1px solid #e4dfe7;
+  border-radius: 14px;
+  background: #fff;
+}
+.sobi-detail-copy .sobi-spec-list > div {
+  padding: 14px 16px;
+  border-top-color: #eeeaf0;
+}
+.sobi-detail-copy .sobi-spec-list > div:first-child {
+  border-top: 0;
+}
+.sobi-detail-copy .sobi-spec-list dt {
+  color: #746d79;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+.sobi-detail-copy .sobi-spec-list dd {
+  color: var(--sobi-purple, #2d1947);
+  font-weight: 600;
+}
+.sobi-detail-copy .sobi-cta {
+  min-width: 218px;
+  min-height: 50px;
+  padding-inline: 20px;
+}
+.sobi-detail-note {
+  max-width: 52ch;
+}
+.sobi-detail-body {
+  max-width: 900px;
+  margin-inline: auto;
+  line-height: 1.8;
+}
+.sobi-detail-body > h2,
+.sobi-detail-body > h3 {
+  letter-spacing: -.02em;
+}
+.sobi-related-products {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-top: clamp(34px, 5vw, 64px);
+  border-top: 1px solid #e4dfe7;
+}
+.sobi-related-products h2 {
+  margin-bottom: 24px;
+}
+@media (max-width: 767px) {
+  .sobi-category-content .sobi-category-intro {
+    min-height: 0;
+    padding-block: 40px;
+  }
+  :is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual img {
+    border-width: 6px;
+    border-radius: 18px;
+  }
+  .sobi-category-content .sobi-child-grid {
+    gap: 12px;
+  }
+  .sobi-category-content .sobi-child-card {
+    padding: 10px;
+    border-radius: 14px;
+  }
+  .sobi-category-content .sobi-child-name {
+    font-size: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sobi-category-content .sobi-child-card,
+  .sobi-category-content .sobi-related-term-card,
+  .sobi-gallery-thumbs .sobi-gallery-open {
+    transition: none;
+  }
+}
+
+/* Order 32: preserve product proportions and give every editorial image the same frame. */
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: #fff;
+  padding: clamp(10px, 1.5vw, 18px);
+}
+.sobi-category-content .sobi-child-thumb img,
+.sobi-category-content .sobi-related-term-thumb img {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  object-fit: contain;
+}
+.sobi-category-content .sobi-product-image,
+.sobi-related-products .sobi-product-image {
+  border: 1px solid #e4dfe7;
+  border-radius: 14px;
+  background: #f7f5ef;
+}
+.sobi-category-content .sobi-product-image img,
+.sobi-related-products .sobi-product-image img {
+  object-fit: contain;
+  padding: clamp(10px, 1.6vw, 18px);
+}
+.sobi-detail-media .sobi-gallery-open img {
+  background: #f7f5ef;
+  padding: clamp(10px, 2vw, 22px);
+}
+
+/* Accordion states are explicit so the same FAQ remains legible in UX Builder and public pages. */
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-item {
+  margin-bottom: 10px;
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 16px 46px 16px 18px;
+  border: 1px solid #ded9e4;
+  border-radius: 10px;
+  background: #fff;
+  color: #2d1947;
+  font-weight: 600;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title:is(:hover, :active),
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title:focus-visible {
+  border-color: #2d1947;
+  background: #f4f1f7;
+  color: #2d1947;
+  text-decoration: none;
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title:focus-visible {
+  outline: 3px solid #a73b05;
+  outline-offset: 2px;
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-item.active > .accordion-title,
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title[aria-expanded="true"] {
+  border-color: #2d1947;
+  border-radius: 10px 10px 0 0;
+  background: #2d1947;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(45, 25, 71, .12);
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title .toggle {
+  top: 50%;
+  right: 12px;
+  left: auto;
+  margin: 0;
+  color: inherit;
+  opacity: 1;
+  translate: 0 -50%;
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-inner {
+  margin-top: 0;
+  padding: 18px;
+  border: 1px solid #ded9e4;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  background: #fbfaf8;
+  color: #514a5b;
+  line-height: 1.7;
+}
+:is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-inner p:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 767px) {
+  :is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title {
+    min-height: 52px;
+    padding: 14px 42px 14px 15px;
+  }
+  :is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-inner {
+    padding: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.sobi-category-content, .sobi-detail-body, .sobi-kraft-faq, .single-blocks .sobi-subcategory-faq) .accordion-title {
+    transition: none;
+  }
+}
+.sobi-site .sobi-custom-callout .sobi-cta {
+  color: var(--sobi-purple) !important;
+  border-color: transparent;
+}
+.sobi-site .sobi-custom-callout .sobi-cta:is(:hover, :focus-visible, :active) {
+  background: #f4f1f7;
+  color: var(--sobi-purple) !important;
+}
+:is(.sobi-category-content, .single-blocks) .sobi-subcategory-visual .img {
+  margin-bottom: 0;
+}
+.sobi-category-content .sobi-child-card:not(:has(img)) .sobi-child-thumb,
+.sobi-category-content .sobi-related-term-card:not(:has(img)) .sobi-related-term-thumb {
+  display: none;
+}
+.sobi-category-content .sobi-child-card:focus-visible,
+.sobi-category-content .sobi-product-card-link:focus-visible,
+.sobi-related-products .sobi-product-card-link:focus-visible {
+  outline: 2px solid var(--sobi-purple);
+  outline-offset: 4px;
+}
+
+.sobi-detail-grid--text {
+  grid-template-columns: minmax(0, 1fr);
+}
+.sobi-product-card-link .sobi-product-image--empty {
+  display: none;
+}
+:is(.sobi-category-content, .sobi-related-products) .sobi-product-card-link:hover img {
+  transform: none;
+}
+
+.sobi-detail-media > .sobi-gallery-open > i {
+  inset: auto 16px 16px auto;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #ded9e4;
+  border-radius: 50%;
+}
+@media (max-width: 767px) {
+  :is(.sobi-category-content, .single-blocks) .sobi-subcategory-hero .button {
+    margin-bottom: 8px;
+  }
+}

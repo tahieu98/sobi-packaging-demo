@@ -1112,6 +1112,18 @@
   object-fit: cover;
   display: block;
 }
+.sobi-gallery-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.sobi-gallery-thumbs .sobi-gallery-open {
+  width: 5rem;
+}
+.sobi-gallery-thumbs .sobi-gallery-open img {
+  aspect-ratio: 1;
+}
 .sobi-gallery-open > i {
   position: absolute;
   bottom: 20px;

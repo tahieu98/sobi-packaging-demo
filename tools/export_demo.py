@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 export_mode = parser.add_mutually_exclusive_group()
 export_mode.add_argument('--only', action='append', default=[], help='Export this route only; repeat for a batch. Preserve other page bodies and existing catalogue/blog data.')
 export_mode.add_argument('--contacts-only', action='store_true', help='Refresh shared contact blocks from the public WordPress homepage.')
+export_mode.add_argument('--sync-catalogue', action='store_true', help='Refresh the public catalogue, products and category navigation.')
 export_mode.add_argument('--sync-audit', action='store_true', help='Refresh the shared layout, homepage and public quote form hints.')
 args = parser.parse_args()
 selected_routes = set(args.only)
@@ -127,7 +128,7 @@ def local_asset(url):
             target.parent.mkdir(parents=True,exist_ok=True)
             if source.is_file():
                 shutil.copyfile(source,target)
-            elif args.sync_audit:
+            elif args.sync_audit or args.sync_catalogue:
                 target.write_bytes(fetch_bytes(SITE+'wp-content/uploads/'+quote(suffix,safe='/.-_')))
             else:
                 raise RuntimeError(f'Missing public media: {suffix}')
@@ -205,12 +206,12 @@ def copy_quote_hints(doc, source):
             '[name="province"] option[value=""]').get_text()
 
 
-def stabilize_builder_ids(main):
-    """Give randomly generated homepage IDs stable names and keep their inline styles."""
+def stabilize_builder_ids(main, prefix='sobi-home-layout'):
+    """Give generated layout IDs stable names and keep their inline styles."""
     ids = {}
     for element in main.find_all(id=re.compile(r'^(section_|image_|row-|col-|text-)\d+$')):
         source_id = element['id']
-        static_id = f'sobi-home-layout-{len(ids) + 1}'
+        static_id = f'{prefix}-{len(ids) + 1}'
         ids[source_id] = static_id
         element['id'] = static_id
     for style in main.find_all('style'):
@@ -244,7 +245,12 @@ def versioned_asset(path, asset):
 def install_assets(doc, path):
     icon = doc.head.select_one('link[rel="icon"]')
     noscript = doc.body.find('noscript', recursive=False)
-    for asset in STYLE_FILES:
+    catalogue_styles = []
+    if doc.select_one('.sobi-category-content, .sobi-product-detail'):
+        catalogue_styles = ['assets/theme/product-category.css', 'assets/theme/catalog-pages.css', 'assets/theme/ux-layouts.css']
+    if doc.select_one('.sobi-archive'):
+        catalogue_styles.append('assets/theme/category-archive.css')
+    for asset in [*STYLE_FILES, *catalogue_styles]:
         if asset.endswith('home-audit.css') and path:
             continue
         link = doc.new_tag('link', rel='stylesheet', href=versioned_asset(path, asset))
@@ -252,7 +258,10 @@ def install_assets(doc, path):
             icon.insert_before(link)
         else:
             doc.head.append(link)
-    for asset in SCRIPT_FILES:
+    scripts = list(SCRIPT_FILES)
+    if doc.select_one('.sobi-archive'):
+        scripts.extend(['assets/js/category-archive.js', 'assets/theme/category-archive.js'])
+    for asset in scripts:
         script = doc.new_tag('script', src=versioned_asset(path, asset), defer='')
         if noscript:
             noscript.insert_before(script)
@@ -325,11 +334,174 @@ def sync_public_audit():
     print(f'Synchronized the public audit across {len(exports)} pages.')
 
 
+def sync_catalogue():
+    """Refresh category and product pages from the public site and keep the demo shell."""
+    exports = {}
+    for output in sorted(OUT.glob('**/*.html')):
+        doc = soup(output.read_text(encoding='utf-8'))
+        route_meta = doc.select_one('meta[name="sobi-route"]')
+        if route_meta:
+            exports[route_meta['content']] = (output, doc)
+    home = soup(fetch(SITE))
+    menu = home.select_one('#sobi-mega')
+    groups = {
+        route(link['href']) for link in menu.select('a[href]')
+        if urlsplit(link['href']).path.strip('/') not in ('', 'san-pham')
+    }
+    products = {r for r in exports if r.startswith('mau-tui/')}
+    paths = sorted(groups | products | {'san-pham/'})
+    known.update(exports.keys() | groups)
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        snapshots = dict(zip(paths, pool.map(lambda path: soup(fetch_bytes(SITE + path)), paths)))
+
+    for name in ('sobi.css', 'conversion.css', 'product-category.css', 'catalog-pages.css',
+                 'category-archive.css', 'ux-layouts.css', 'category-archive.js', 'sobi.js'):
+        content = fetch_bytes(SITE + PUBLIC_THEME + name)
+        if name == 'sobi.js':
+            (OUT / 'assets/js/sobi.js').write_bytes(make_demo_script(content.decode('utf-8')).encode('utf-8'))
+        else:
+            (OUT / 'assets/theme' / name).write_bytes(content.rstrip() + b'\n')
+
+    def catalogue_pages(first):
+        yield first
+        for link in first.select('#sobi-archive-results .sobi-pagination a.page-numbers:not(.next):not(.prev)'):
+            yield soup(fetch(link['href'].split('#')[0]))
+
+    def archive_snapshot(main, path):
+        grid = main.select_one('#sobi-archive-results .sobi-product-grid')
+        if grid is None:
+            return
+        source_url = SITE + path
+        for page in catalogue_pages(main):
+            if page is main:
+                continue
+            for card in page.select('#sobi-archive-results .sobi-product-card'):
+                grid.append(card.extract())
+        cards = {route(card.select_one('a')['href']): card for card in grid.select('.sobi-product-card')}
+        for card in cards.values():
+            card['data-archive-options'] = []
+        # Snapshot the same product membership as the public WooCommerce archive.
+        for field in main.select('.sobi-archive-options input'):
+            query = urlencode({field['name']: field['value']})
+            filtered = soup(fetch(source_url + '?' + query))
+            for page in catalogue_pages(filtered):
+                for anchor in page.select('#sobi-archive-results .sobi-product-card a.sobi-product-card-link'):
+                    key = route(anchor['href'])
+                    if key in cards:
+                        cards[key]['data-archive-options'].append(field['value'])
+        popular = soup(fetch(source_url + '?sort=popular'))
+        order = 0
+        for page in catalogue_pages(popular):
+            for anchor in page.select('#sobi-archive-results .sobi-product-card a.sobi-product-card-link'):
+                key = route(anchor['href'])
+                if key in cards:
+                    cards[key]['data-archive-order'] = str(order)
+                    order += 1
+        # The browser provides pagination and sort/view URLs for static hosting.
+        for nav in main.select('#sobi-archive-results .sobi-pagination'):
+            nav.decompose()
+        for card in cards.values():
+            card['data-archive-options'] = ' '.join(card['data-archive-options'])
+
+    data_file = OUT / 'assets/js/data.js'
+    data = json.loads(data_file.read_text(encoding='utf-8').split(' = ', 1)[1].rstrip(';\n'))
+    search = {entry['route']: entry for entry in data['search']}
+    for page in [snapshots['san-pham/'], soup(fetch(SITE + 'san-pham/?trang=2'))]:
+        for card in page.select('.sobi-catalog .sobi-product-card'):
+            key = route(card.select_one('a')['href'])
+            for entry in data['products']:
+                if entry['route'] == key:
+                    entry['html'] = str(rewrite_tree(soup(str(card)), template=True))
+
+    for path, snapshot in snapshots.items():
+        output, demo = exports.get(path, (OUT / path / 'index.html', None))
+        if demo is None:
+            demo = soup(str(exports['san-pham/'][1]))
+        main = snapshot.select_one('main')
+        if main is None or not main.select_one('h1'):
+            raise RuntimeError(f'Missing catalogue page {path}')
+        search[path] = {
+            'route': path, 'title': main.select_one('h1').get_text(' ', strip=True),
+            'text': main.get_text(' ', strip=True)[:25000],
+        }
+        if main.select_one('.sobi-archive'):
+            archive_snapshot(main, path)
+        stabilize_builder_ids(main, 'sobi-demo-layout')
+        for tag in main.select('script, #wpadminbar, .post-edit-link, link, meta'):
+            tag.decompose()
+        for number, title in enumerate(main.select('.accordion-title'), start=1):
+            panel = main.find(id=title.get('aria-controls'))
+            title.name = 'button'
+            title['type'] = 'button'
+            title['id'] = f'demo-faq-{number}-title'
+            title.attrs.pop('href', None)
+            for toggle in title.select('button.toggle'):
+                toggle.name = 'span'
+                toggle['aria-hidden'] = 'true'
+                toggle.attrs.pop('aria-label', None)
+            if panel:
+                panel['id'] = f'demo-faq-{number}'
+                title['aria-controls'] = panel['id']
+                panel['aria-labelledby'] = title['id']
+                panel['role'] = 'region'
+                if title.get('aria-expanded') != 'true':
+                    panel['hidden'] = ''
+        for anchor in main.select('.sobi-article-share a[href*="facebook.com/sharer/"]'):
+            anchor['data-demo-share'] = 'facebook'
+            anchor['href'] = 'https://www.facebook.com/sharer/sharer.php'
+        demo.select_one('main').replace_with(rewrite_tree(main, path))
+        demo.title.string = snapshot.title.get_text() + ' · Demo'
+        demo.body['class'] = [*snapshot.body.get('class', []), 'sobi-static-demo']
+        demo.select_one('meta[name="sobi-route"]')['content'] = path
+        demo.select_one('meta[name="sobi-root"]')['content'] = relative_root(path)
+        demo.select_one('link[rel="icon"]')['href'] = relative_root(path) + 'assets/theme/images/sobi-site-icon.png'
+        description = snapshot.select_one('meta[name="description"]')
+        demo.select_one('meta[name="description"]')['content'] = description.get('content', '') if description else ''
+        # Rebuild shared chrome for new route depths, including footer and contact links.
+        for selector in ('#header', '#footer'):
+            node = soup(str(snapshot.select_one(selector))).find()
+            demo.select_one(selector).replace_with(rewrite_tree(node, path))
+        sync_quick_contacts(demo, snapshot, path)
+        banner = demo.select_one('.sobi-demo-banner a')
+        banner['href'] = rewrite_url(SITE + 'lien-he/#yeu-cau-bao-gia', path)
+        exports[path] = (output, demo)
+
+    homepage = exports[''][1]
+    homepage.select_one('.sobi-picks .sobi-product-grid').replace_with(
+        rewrite_tree(home.select_one('.sobi-picks .sobi-product-grid'), '')
+    )
+    data['search'] = list(search.values())
+    data_file.write_bytes(('window.SOBI_DATA = ' + json.dumps(data, ensure_ascii=False).replace('<', '\\u003c') + ';\n').encode('utf-8'))
+
+    for path, (output, demo) in exports.items():
+        existing = demo.select_one('#sobi-mega')
+        if path not in snapshots and existing:
+            existing.replace_with(rewrite_tree(soup(str(menu)).find(), path))
+        for form in demo.select('#header form.searchform'):
+            form['action'] = rewrite_url(SITE + 'search/', path)
+        for tag in demo.select('head link[rel="stylesheet"], script[src]'):
+            tag.decompose()
+        install_assets(demo, path)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(render_static_html(demo).encode('utf-8'))
+
+    manifest_file = OUT / 'docs/content-manifest.json'
+    manifest = json.loads(manifest_file.read_text(encoding='utf-8'))
+    manifest['generated'] = datetime.date.today().isoformat()
+    manifest['pages'] = sorted(str(output.relative_to(OUT).as_posix()) for output, _ in exports.values())
+    manifest['media_files'] = sum(asset.is_file() for asset in (OUT / 'assets/media').rglob('*'))
+    manifest_file.write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+    print(f'Synchronized {len(paths)} catalogue pages and shared navigation across {len(exports)} pages.')
+
+
 known = set()
 if args.contacts_only:
     known.update(json.loads((OUT/'docs/content-manifest.json').read_text(encoding='utf-8'))['pages'])
     known = {path.removesuffix('index.html') for path in known}
     refresh_public_contacts()
+    raise SystemExit(0)
+if args.sync_catalogue:
+    sync_catalogue()
     raise SystemExit(0)
 if args.sync_audit:
     sync_public_audit()
