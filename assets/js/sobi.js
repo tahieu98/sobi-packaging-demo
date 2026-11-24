@@ -8,9 +8,17 @@
   };
   const getAllowedVideoUrl = (raw, provider) => {
     if (typeof raw !== 'string' || !raw) return null;
+    // The static export rewrites local MP4 URLs relative to each HTML page.
+    const demoPath = provider === 'mp4' && document.body.classList.contains('sobi-static-demo')
+      ? raw.match(/^(?:\.\/|(?:\.\.\/)+)assets\/media\//)
+      : null;
     let url;
-    try { url = new URL(raw); }
+    try { url = new URL(raw, demoPath ? location.href : undefined); }
     catch { return null; }
+    if (demoPath && !url.href.startsWith(new URL(demoPath[0], location.href).href)) return null;
+    if (demoPath && location.protocol === 'file:' && url.protocol === 'file:') {
+      return /\.mp4$/i.test(url.pathname) ? url : null;
+    }
     if (url.username || url.password || !['http:', 'https:'].includes(url.protocol)) return null;
     if (provider === 'facebook') {
       if (url.protocol !== 'https:' || url.port || url.hostname !== 'www.facebook.com' || url.pathname !== '/plugins/video.php') return null;
@@ -60,7 +68,8 @@
       });
       video.addEventListener('error', () => {
         container.dataset.videoState = 'error';
-        showVideoStatus(container, 'Không thể tải video. Bạn có thể mở video bằng liên kết bên dưới.');
+        const fallback = container.parentElement?.querySelector('figcaption a');
+        showVideoStatus(container, fallback ? 'Không thể tải video. Bạn có thể mở video bằng liên kết bên dưới.' : 'Không thể tải video.');
       });
       container.replaceChildren(video);
       video.src = source.href;

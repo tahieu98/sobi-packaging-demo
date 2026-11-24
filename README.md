@@ -65,6 +65,8 @@ Order 33 cập nhật viền khối giới thiệu, nút Zalo, tiêu đề và c
 
 Order 35 đổi trạng thái tương tác của thẻ danh mục con sang nền cam và chữ tím. Trạng thái này áp dụng cho hover, focus và chạm. Dòng Xem danh mục được bỏ khỏi các thẻ danh mục con.
 
+Order 36 bỏ chú thích dưới banner video Trang chủ. Trình phát dùng đường dẫn MP4 tương đối trong bản demo và phát được trên GitHub Pages, máy chủ thử nghiệm và khi mở trực tiếp `index.html`.
+
 Chạy `python tools/export_demo.py --sync-catalogue` để tái xuất từ WordPress local. Chế độ này đọc các trang, ảnh và mã giao diện công khai qua HTTP rồi lưu thành HTML, CSS và JavaScript.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.
