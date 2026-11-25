@@ -1,5 +1,9 @@
 # Màu nền và thông điệp thương hiệu
 
+## Order 37 — thanh thông tin doanh nghiệp
+
+`.sobi-business-topbar` dùng nền đen `#262626`, chữ trắng và giữ nguyên text, icon, khoảng cách, chiều cao và responsive layout. Rule nằm trong `assets/theme/header-audit.css`, được nạp sau `conversion.css`; token `--sobi-blue` vẫn được giữ cho các thành phần CTA và focus khác.
+
 Cập nhật 17/11/2026, Order 6. Nền cam dùng token `--sobi-orange-dark` trong `conversion.css` chuyển từ `#c04a0b` sang `#e26624` theo yêu cầu thương hiệu. Những nơi dùng token (strip sau hero, thẻ cam kết, các bước quy trình, footer và viền form báo giá) tự nhận cùng sắc độ mới. Gradient cùng nhóm và meta theme-color cũng dùng cam mới; tím, xanh CTA và cam logo giữ các mã hiện hành.
 
 Trang chủ CMS ID 19 giữ cấu trúc Section/Row/Column/Text/Button native UX Builder. Hai cặp thông điệp được chia thành span văn bản, bố trí bằng gap CSS và tự xuống dòng khi thiếu chiều ngang; không còn span `.sobi-top-dot` hoặc dấu `·` trong dòng eyebrow hero. Nội dung là:

@@ -2,7 +2,7 @@
 
 [**Xem demo online**](https://tahieu98.github.io/sobi-packaging-demo/) · [Repository](https://github.com/tahieu98/sobi-packaging-demo)
 
-Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 và Order 35 ngày 24/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
+Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 và Order 35 ngày 24/11/2026, cùng nền thanh thông tin doanh nghiệp theo Order 37 ngày 25/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
 
 ## Mở bản demo
 
