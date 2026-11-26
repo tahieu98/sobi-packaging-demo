@@ -462,8 +462,6 @@ def sync_catalogue():
             node = soup(str(snapshot.select_one(selector))).find()
             demo.select_one(selector).replace_with(rewrite_tree(node, path))
         sync_quick_contacts(demo, snapshot, path)
-        banner = demo.select_one('.sobi-demo-banner a')
-        banner['href'] = rewrite_url(SITE + 'lien-he/#yeu-cau-bao-gia', path)
         exports[path] = (output, demo)
 
     homepage = exports[''][1]
@@ -628,9 +626,7 @@ for r,raw in documents.items():
     for text in doc.select('.sobi-article-byline'):
         # Public marketing demo does not need an internal WordPress login name.
         text.string=re.sub(r'Bởi .*? ·','Bởi Sobi ·',text.get_text(' ',strip=True))
-    banner=doc.new_tag('aside',attrs={'class':'sobi-demo-banner','aria-label':'Thông tin bản demo'})
-    banner.append(soup('<span><strong>DEMO GIAO DIỆN</strong> · Khám phá nội dung và trải nghiệm tương tác Sobi.</span><a href="'+SITE+'lien-he/#yeu-cau-bao-gia">Thử form báo giá <span aria-hidden="true">→</span></a>'))
-    doc.body.insert(0,banner)
+    # Order 38: the static demo no longer adds a demo banner.
     rewrite_tree(doc,r)
     # Replace stale source-site URLs in third-party share parameters.
     for anchor in doc.select('.sobi-article-share a'):

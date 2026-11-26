@@ -21,6 +21,17 @@
   font-size: 19px;
 }
 
+/* Order 38: the delivery message moves here from the topbar on mobile only. */
+.sobi-after-hero p > .sobi-after-hero-delivery {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .sobi-after-hero p > .sobi-after-hero-delivery {
+    display: inline-flex;
+  }
+}
+
 @media (min-width: 768px) {
   .sobi-after-hero p {
     flex-direction: row;
@@ -97,7 +108,16 @@
 }
 
 .sobi-site .sobi-steps-row > .col > .col-inner {
-  background: #fff;
+  /* Order 38: same orange gradient as .sobi-social-benefits cards. */
+  background-color: #fff;
+  background-image: linear-gradient(135deg,
+    rgba(242, 105, 33, 0.9) 0%,
+    rgba(242, 105, 33, 0.8) 16.667%,
+    rgba(242, 105, 33, 0.7) 33.333%,
+    rgba(242, 105, 33, 0.6) 50%,
+    rgba(242, 105, 33, 0.5) 66.667%,
+    rgba(242, 105, 33, 0.4) 83.333%,
+    rgba(242, 105, 33, 0.3) 100%);
   border: 1px solid #e6deec;
   border-radius: 12px;
   text-align: left;

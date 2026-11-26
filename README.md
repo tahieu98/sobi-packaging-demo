@@ -2,7 +2,7 @@
 
 [**Xem demo online**](https://tahieu98.github.io/sobi-packaging-demo/) · [Repository](https://github.com/tahieu98/sobi-packaging-demo)
 
-Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 và Order 35 ngày 24/11/2026, cùng nền thanh thông tin doanh nghiệp theo Order 37 ngày 25/11/2026. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
+Bản mô phỏng giao diện công khai của Sobi Packaging, cập nhật giao diện danh mục và thẻ sản phẩm theo Order 33 và Order 35 ngày 24/11/2026, cùng nền thanh thông tin doanh nghiệp theo Order 37 ngày 25/11/2026. Order 38 (26/11/2026): trang Sản phẩm có thanh danh mục hai cấp theo menu Danh mục, header/topbar mobile mới, thẻ quy trình gradient cam và không còn banner demo. Mở `index.html` trực tiếp bằng Chrome hoặc dùng preview bên dưới. Không cần WordPress, PHP, MySQL, npm hay bước build để xem demo.
 
 ## Mở bản demo
 
@@ -20,7 +20,7 @@ Nhấp đúp `Start-Demo.command` để mở preview bằng Terminal trên macOS
 67 tệp HTML gồm các danh mục cha và danh mục thứ cấp, các trang thông tin, 9 chi tiết mẫu túi, 18 bài Blog, 3 chuyên mục, trang tìm kiếm, 404 và hai trang mẫu cũ vốn đang public tại nguồn. Bản đồ đầy đủ ở `docs/content-manifest.json`.
 
 - Header/mobile menu, menu danh mục WooCommerce, điều khiển bằng phím/Escape, link social và nút về đầu trang.
-- Trang Sản phẩm: tìm tên/mã, tìm không dấu, lọc nhóm, phân trang 8 mẫu/trang và trạng thái rỗng.
+- Trang Sản phẩm: tìm tên/mã, tìm không dấu, thanh danh mục cấp 1 (7 nhóm như menu Danh mục) và cấp 2 khi chọn nhóm, phân trang 8 mẫu/trang và trạng thái rỗng. Dữ liệu nhóm ở `catalogGroups` trong `assets/js/data.js`.
 - Danh mục cấp cha có cột lọc trên PC, bảng lọc trên tablet và mobile, lưới 4/3/2 cột, sắp xếp và chế độ danh sách. Bộ lọc dùng dữ liệu catalogue đã xuất và chạy trong trình duyệt.
 - Chi tiết mẫu: phóng ảnh, thông số, FAQ, chia sẻ/copy link, CTA điền sẵn tên mẫu.
 - Giấy kraft: các anchor, bảng so sánh cuộn ngang trong khung và FAQ đóng/mở.

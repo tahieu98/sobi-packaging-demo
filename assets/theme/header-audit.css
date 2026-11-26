@@ -315,6 +315,62 @@
   }
 }
 
+/* Order 38, mobile only: one-line business bar; hotline on the logo row; search and "Danh mục" share the second row. */
+@media (max-width: 767px) {
+  .sobi-business-topbar .sobi-business-info {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .sobi-business-topbar .sobi-business-info > * {
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .sobi-business-topbar .sobi-business-info .sobi-business-delivery {
+    display: none;
+  }
+
+  .sobi-header .sobi-mainbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo phone"
+      "search category";
+  }
+
+  .sobi-header .sobi-header-nav {
+    display: contents;
+  }
+
+  .sobi-header .sobi-logo {
+    grid-area: logo;
+    align-self: center;
+  }
+
+  .sobi-header .sobi-desktop-nav {
+    grid-area: category;
+  }
+
+  .sobi-header .sobi-desktop-nav,
+  .sobi-header .sobi-category-control,
+  .sobi-site .sobi-header .sobi-category-control > button {
+    width: 100%;
+  }
+
+  .sobi-site .sobi-header .sobi-category-control > button {
+    justify-content: center;
+  }
+
+  .sobi-site .sobi-header .sobi-category-control > button .icon-angle-down {
+    margin-left: 0;
+  }
+
+  .sobi-header .sobi-mobile-toggle,
+  .sobi-header .sobi-mobile-menu:not([hidden]) {
+    display: none;
+  }
+}
+
 @media (max-width: 359px) {
   .sobi-business-topbar .sobi-shell,
   .sobi-header .sobi-mainbar,

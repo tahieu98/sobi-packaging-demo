@@ -30,7 +30,10 @@
     if (!catalog || route !== 'san-pham/') return;
     const params = new URLSearchParams(location.search);
     const search = (params.get('tim') || '').slice(0,100), group = params.get('nhom') || '', page = currentPage();
-    const results = data.products.filter(item => (!group || item.category === group) && normalize(`${item.title} ${item.code}`).includes(normalize(search)));
+    const groups = data.catalogGroups || [];
+    const top = groups.find(item => item.slug === group || item.children.some(child => child.slug === group));
+    const inGroup = item => !group || item.category === group || (top && top.slug === group && top.children.some(child => child.slug === item.category));
+    const results = data.products.filter(item => inGroup(item) && normalize(`${item.title} ${item.code}`).includes(normalize(search)));
     const pageCount = Math.ceil(results.length / 8);
     const valid = page > 0 && (page === 1 || page <= pageCount);
     catalog.querySelector('.sobi-result-count').textContent = `${results.length} mẫu sản phẩm${search ? ` cho “${search}”` : ''}`;
@@ -38,12 +41,13 @@
     catalog.querySelector('.sobi-product-grid').innerHTML = valid && results.length ? results.slice((page-1)*8,page*8).map(item=>fillTemplate(item.html)).join('') : empty(valid ? 'Chưa có mẫu phù hợp. Thử tên, mã mẫu hoặc nhóm khác.' : 'Trang sản phẩm này không tồn tại.', 'san-pham/');
     catalog.querySelectorAll('.sobi-pagination').forEach(el=>el.remove());
     catalog.insertAdjacentHTML('beforeend',pagination(pageCount,page,'san-pham/',{tim:search,nhom:group},'Trang sản phẩm'));
-    catalog.querySelectorAll('.sobi-filter a').forEach(link=>{
-      const active = (new URL(link.href).searchParams.get('nhom') || '') === group;
-      link.classList.toggle('is-active',active);
-      if (active) link.setAttribute('aria-current','page'); else link.removeAttribute('aria-current');
-      const next = new URL(link.href); if (search) next.searchParams.set('tim',search); link.href = next.href;
-    });
+    // Order 38: level-1 groups mirror the header "Danh mục"; a selected group adds its level-2 bar.
+    const filterLink = (slug, label, active, current = active) => `<a class="${active ? 'is-active' : ''}"${current ? ' aria-current="page"' : ''} href="${urlFor('san-pham/',{nhom:slug,tim:search})}">${escape(label)}</a>`;
+    const stack = catalog.querySelector('.sobi-filter-stack');
+    if (stack && groups.length) {
+      stack.innerHTML = `<nav class="sobi-filter" aria-label="Nhóm sản phẩm">${filterLink('','Tất cả',!group)}${groups.map(item=>filterLink(item.slug,item.label,top===item,group===item.slug)).join('')}</nav>`
+        + (top && top.children.length ? `<nav class="sobi-filter sobi-filter--sub" aria-label="Danh mục thứ cấp">${filterLink(top.slug,'Tất cả',group===top.slug)}${top.children.map(child=>filterLink(child.slug,child.label,group===child.slug)).join('')}</nav>` : '');
+    }
     catalog.querySelector('input[name="tim"]').value = search;
   };
   const blogList = document.querySelector('.sobi-blog-list');
