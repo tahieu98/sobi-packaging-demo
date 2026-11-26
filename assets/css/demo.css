@@ -29,3 +29,8 @@
   padding: 10px 12px;
 }
 .sobi-static-demo .sobi-quote-form textarea { min-height: 100px; }
+
+/* Allow the business contacts to wrap on very narrow demo previews. */
+@media (max-width: 359px) {
+  .sobi-static-demo .sobi-business-topbar .sobi-business-info { flex-wrap: wrap; }
+}

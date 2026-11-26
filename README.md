@@ -17,7 +17,7 @@ Nhấp đúp `Start-Demo.command` để mở preview bằng Terminal trên macOS
 
 ## Nội dung và tương tác
 
-67 tệp HTML gồm các danh mục cha và danh mục thứ cấp, các trang thông tin, 9 chi tiết mẫu túi, 18 bài Blog, 3 chuyên mục, trang tìm kiếm, 404 và hai trang mẫu cũ vốn đang public tại nguồn. Bản đồ đầy đủ ở `docs/content-manifest.json`.
+69 tệp HTML, gồm 67 trang đã có và hai trang chi tiết mẫu QA Order 39. Trang Sản phẩm có thêm 25 mẫu tổng hợp gắn nhãn `[QA Order 39]` để thử danh mục và bộ lọc; các mẫu này không phải sản phẩm thương mại. Bản đồ đầy đủ ở [manifest](docs/content-manifest.json).
 
 - Header/mobile menu, menu danh mục WooCommerce, điều khiển bằng phím/Escape, link social và nút về đầu trang.
 - Trang Sản phẩm: tìm tên/mã, tìm không dấu, thanh danh mục cấp 1 (7 nhóm như menu Danh mục) và cấp 2 khi chọn nhóm, phân trang 8 mẫu/trang và trạng thái rỗng. Dữ liệu nhóm ở `catalogGroups` trong `assets/js/data.js`.
@@ -39,9 +39,9 @@ Form báo giá chỉ dựng bản tóm tắt trên thiết bị, không gửi em
 - `assets/media/`: media công khai được trang tham chiếu, bao gồm MP4.
 - `assets/js/sobi.js`: tương tác giao diện từ dự án, đã bỏ gửi báo giá đến server.
 - `assets/js/demo.js`: bộ lọc/tìm/phân trang/form/bình luận mô phỏng.
-- `assets/js/category-archive.js` áp dụng bộ lọc danh mục cấp cha từ URL và các lựa chọn đã xuất cùng HTML.
+- `assets/js/category-archive.js` áp dụng bộ lọc danh mục cấp cha từ URL, HTML đã xuất và dữ liệu tổng hợp. Order 39 thêm nhóm **Màu sắc**; kết hợp nhiều màu bằng **hoặc**, kết hợp màu và chất liệu bằng **và**. Để thử, mở **Túi cửa sổ** và chọn **Trắng + Kraft** (`QA-O39-06`).
 - `assets/js/data.js`: dữ liệu công khai của sản phẩm/bài viết/trang.
-- `tools/serve.py`: preview tùy chọn; `tools/export_demo.py`: công cụ tái xuất tùy chọn, cần beautifulsoup4 và website nguồn đang chạy.
+- `tools/serve.py`: preview tùy chọn; `tools/export_demo.py`: công cụ tái xuất tùy chọn, cần beautifulsoup4 và website nguồn đang chạy. Khi tái xuất toàn bộ, đối chiếu và giữ riêng 25 mẫu Order 39 trong `assets/js/data.js` cùng hai trang chi tiết QA: dữ liệu này không còn trong catalogue công khai của WordPress.
 - `docs/github-pages-costs.md`: nghiên cứu chi phí và các phương án xuất bản.
 - `docs/pages-workflow.yml.example`: workflow GitHub Pages mẫu, chưa được kích hoạt.
 

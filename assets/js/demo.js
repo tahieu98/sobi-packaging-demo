@@ -32,7 +32,7 @@
     const search = (params.get('tim') || '').slice(0,100), group = params.get('nhom') || '', page = currentPage();
     const groups = data.catalogGroups || [];
     const top = groups.find(item => item.slug === group || item.children.some(child => child.slug === group));
-    const inGroup = item => !group || item.category === group || (top && top.slug === group && top.children.some(child => child.slug === item.category));
+    const inGroup = item => !group || (item.productCategories || [item.category]).some(slug => slug === group || (top?.slug === group && top.children.some(child => child.slug === slug)));
     const results = data.products.filter(item => inGroup(item) && normalize(`${item.title} ${item.code}`).includes(normalize(search)));
     const pageCount = Math.ceil(results.length / 8);
     const valid = page > 0 && (page === 1 || page <= pageCount);
@@ -42,11 +42,11 @@
     catalog.querySelectorAll('.sobi-pagination').forEach(el=>el.remove());
     catalog.insertAdjacentHTML('beforeend',pagination(pageCount,page,'san-pham/',{tim:search,nhom:group},'Trang sản phẩm'));
     // Order 38: level-1 groups mirror the header "Danh mục"; a selected group adds its level-2 bar.
-    const filterLink = (slug, label, active, current = active) => `<a class="${active ? 'is-active' : ''}"${current ? ' aria-current="page"' : ''} href="${urlFor('san-pham/',{nhom:slug,tim:search})}">${escape(label)}</a>`;
+    const filterLink = (level, id, slug, label, active, current = active) => `<a id="sobi-filter-${level}-${escape(id)}" class="sobi-filter-tab${active ? ' is-active' : ''}"${current ? ' aria-current="page"' : ''} href="${escape(urlFor('san-pham/',{nhom:slug,tim:search}))}">${escape(label)}</a>`;
     const stack = catalog.querySelector('.sobi-filter-stack');
     if (stack && groups.length) {
-      stack.innerHTML = `<nav class="sobi-filter" aria-label="Nhóm sản phẩm">${filterLink('','Tất cả',!group)}${groups.map(item=>filterLink(item.slug,item.label,top===item,group===item.slug)).join('')}</nav>`
-        + (top && top.children.length ? `<nav class="sobi-filter sobi-filter--sub" aria-label="Danh mục thứ cấp">${filterLink(top.slug,'Tất cả',group===top.slug)}${top.children.map(child=>filterLink(child.slug,child.label,group===child.slug)).join('')}</nav>` : '');
+      stack.innerHTML = `<nav class="sobi-filter" aria-label="Nhóm sản phẩm">${filterLink('top','all','','Tất cả',!group)}${groups.map(item=>filterLink('top',item.slug,item.slug,item.label,top===item,group===item.slug)).join('')}</nav>`
+        + (top && top.children.length ? `<nav class="sobi-filter sobi-filter--sub" aria-label="Danh mục thứ cấp">${filterLink('sub','all',top.slug,'Tất cả',group===top.slug)}${top.children.map(child=>filterLink('sub',child.slug,child.slug,child.label,group===child.slug)).join('')}</nav>` : '');
     }
     catalog.querySelector('input[name="tim"]').value = search;
   };

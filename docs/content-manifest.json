@@ -39,6 +39,8 @@
     "lien-he/index.html",
     "mau-tui/bo-tui-cua-so-qua-tang/index.html",
     "mau-tui/kraft-quai-xoan-sgd01/index.html",
+    "mau-tui/qa-order-39-tui-giay-kraft/index.html",
+    "mau-tui/qa-order-39-tui-ivory/index.html",
     "mau-tui/tui-cua-so-csh01/index.html",
     "mau-tui/tui-cua-so-tcs02/index.html",
     "mau-tui/tui-giay-mau/index.html",
@@ -80,5 +82,6 @@
       "bytes": 16681088
     }
   ],
-  "source_blog_landing_rebuilt": false
+  "source_blog_landing_rebuilt": false,
+  "order_39_synthetic_products": 25
 }

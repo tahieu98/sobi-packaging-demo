@@ -320,15 +320,38 @@
   outline: 2px solid var(--sobi-purple);
   outline-offset: -2px;
 }
-@media (max-width: 700px) {
+/* Order 39: two independently scrolling panes on mobile. */
+@media (max-width: 767px) {
   .sobi-site .sobi-mega.is-enhanced {
     height: var(--sobi-mega-budget);
-    grid-template-rows: minmax(0, auto) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px;
   }
-  .sobi-mega.is-enhanced > .sobi-mega-choices {
-    max-height: min(160px, calc(var(--sobi-mega-budget) * .4));
+  .sobi-site .sobi-mega.is-enhanced:not(:has(> .sobi-mega-choices)) {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .sobi-mega.is-enhanced > .sobi-mega-content { max-height: 100%; }
+  .sobi-mega.is-enhanced > :is(.sobi-mega-choices, .sobi-mega-content) {
+    min-width: 0;
+    max-height: none;
+    overflow-wrap: anywhere;
+  }
+  .sobi-mega.is-enhanced > .sobi-mega-choices { display: flex; }
+  .sobi-site .sobi-mega.is-enhanced .sobi-mega-choices button {
+    min-height: 44px;
+    padding: 8px;
+    font-size: 13px;
+    white-space: normal;
+    gap: 4px;
+  }
+  .sobi-site .sobi-mega.is-enhanced .sobi-mega-featured { gap: 8px; font-size: 16px; }
+  .sobi-site .sobi-mega.is-enhanced .sobi-mega-heading { font-size: 14px; }
+  .sobi-site .sobi-mega.is-enhanced .sobi-mega-applications {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
 }
 
 /* Order 8: native Builder landing pages for secondary product categories. */

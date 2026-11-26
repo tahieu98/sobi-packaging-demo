@@ -5,8 +5,59 @@
 
   const form = archive.querySelector('#sobi-archive-filter');
   const results = archive.querySelector('#sobi-archive-results');
-  const grid = results.querySelector('.sobi-product-grid');
   const count = results.querySelector('.sobi-archive-count');
+  let grid = results.querySelector('.sobi-product-grid');
+  const data = window.SOBI_DATA;
+  const route = document.querySelector('meta[name="sobi-route"]').content;
+  const slug = route.split('/').filter(Boolean).pop();
+  const group = data.catalogGroups?.find(item => item.slug === slug);
+  const fixtures = group ? data.products.filter(item => item.qaOptions && item.productCategories.some(category => category === slug || group.children.some(child => child.slug === category))) : [];
+  if (fixtures.length) {
+    results.querySelector('.sobi-archive-empty')?.remove();
+    if (!grid) {
+      grid = document.createElement('div');
+      grid.className = 'sobi-product-grid';
+      results.append(grid);
+    }
+    const root = new URL(document.querySelector('meta[name="sobi-root"]').content, document.baseURI);
+    const template = document.createElement('template');
+    const labels = { mau_sac: 'Màu sắc', chat_lieu: 'Chất liệu', quai: 'Kiểu quai', nganh: 'Ngành hàng' };
+    for (const item of fixtures) {
+      template.innerHTML = item.html.replaceAll('__SOBI_ROOT__', root.href);
+      const card = template.content.firstElementChild;
+      const options = Object.fromEntries(Object.entries(item.qaOptions));
+      const children = group.children.filter(child => item.productCategories.includes(child.slug) && child.id);
+      if (children.length) {
+        options.nganh = Object.fromEntries(children.map(child => [String(child.id), child.label]));
+        card.dataset.archiveOptions += ' ' + children.map(child => child.id).join(' ');
+      }
+      grid.prepend(card);
+      for (const [key, values] of Object.entries(options)) {
+        if (!labels[key]) continue;
+        const name = `${key}[]`;
+        let field = [...form.querySelectorAll('fieldset')].find(el => [...el.querySelectorAll('input')].some(input => input.name === name));
+        if (!field) {
+          field = document.createElement('fieldset');
+          field.className = 'sobi-archive-filter-box';
+          const legend = document.createElement('legend');
+          legend.textContent = labels[key];
+          const choices = document.createElement('div');
+          choices.className = 'sobi-archive-options';
+          field.append(legend, choices);
+          form.querySelector('.sobi-archive-filter-actions').before(field);
+        }
+        for (const [value, label] of Object.entries(values)) {
+          if ([...field.querySelectorAll('input')].some(input => input.value === value)) continue;
+          const option = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'checkbox'; input.name = name; input.value = value;
+          const text = document.createElement('span'); text.textContent = label;
+          option.append(input, text);
+          field.querySelector('.sobi-archive-options').append(option);
+        }
+      }
+    }
+  }
   const searchInput = form.elements.tim_mau;
   const params = new URLSearchParams(location.search);
   const normalize = value => value.normalize('NFD').replace(/\p{M}/gu, '').replace(/đ/gi, 'd').toLocaleLowerCase('vi').trim();
