@@ -17,7 +17,9 @@ export_mode.add_argument('--only', action='append', default=[], help='Export thi
 export_mode.add_argument('--contacts-only', action='store_true', help='Refresh shared contact blocks from the public WordPress homepage.')
 export_mode.add_argument('--sync-catalogue', action='store_true', help='Refresh the public catalogue, products and category navigation.')
 export_mode.add_argument('--sync-audit', action='store_true', help='Refresh the shared layout, homepage and public quote form hints.')
+parser.add_argument('--catalogue-routes', type=Path, help='Route manifest emitted by order-40-catalogue.php export.')
 args = parser.parse_args()
+route_manifest = json.loads(args.catalogue_routes.read_text(encoding='utf-8-sig')) if args.catalogue_routes else None
 selected_routes = set(args.only)
 
 OUT = Path(__file__).resolve().parents[1]
@@ -147,6 +149,20 @@ def rewrite_url(url,path='',template=False):
     if parts.netloc!=urlsplit(SITE).netloc:return url
     if not parts.path.startswith(urlsplit(SITE).path):return url
     dest=route(url);query=parts.query
+    if route_manifest:
+        target = route_manifest['aliases'].get(dest)
+        fields = parse_qs(query, keep_blank_values=True)
+        if dest == 'san-pham/' and fields.get('nhom'):
+            target = route_manifest['groups'].get(fields['nhom'][0])
+            if target:
+                fields.pop('nhom', None)
+                if fields.get('tim'):
+                    fields['tim_mau'] = fields.pop('tim')
+        if target:
+            redirect = urlsplit(target)
+            dest = redirect.path
+            fields.update(parse_qs(redirect.query))
+            query = urlencode(fields, doseq=True)
     # Blog numbered URLs use the same HTML and browser-side pagination.
     m=re.search(r'^(.*?)/?page/(\d+)/$',dest)
     if m:
@@ -246,9 +262,9 @@ def install_assets(doc, path):
     icon = doc.head.select_one('link[rel="icon"]')
     noscript = doc.body.find('noscript', recursive=False)
     catalogue_styles = []
-    if doc.select_one('.sobi-category-content, .sobi-product-detail'):
+    if doc.select_one('.sobi-category-content, .sobi-product-detail, .sobi-catalog'):
         catalogue_styles = ['assets/theme/product-category.css', 'assets/theme/catalog-pages.css', 'assets/theme/ux-layouts.css']
-    if doc.select_one('.sobi-archive'):
+    if doc.select_one('.sobi-archive, .sobi-catalogue-facets'):
         catalogue_styles.append('assets/theme/category-archive.css')
     for asset in [*STYLE_FILES, *catalogue_styles]:
         if asset.endswith('home-audit.css') and path:
@@ -337,20 +353,36 @@ def sync_public_audit():
 def sync_catalogue():
     """Refresh category and product pages from the public site and keep the demo shell."""
     exports = {}
+    existing_aliases = set()
     for output in sorted(OUT.glob('**/*.html')):
         doc = soup(output.read_text(encoding='utf-8'))
         route_meta = doc.select_one('meta[name="sobi-route"]')
         if route_meta:
             exports[route_meta['content']] = (output, doc)
+        elif doc.select_one('#catalogue-destination') and output.name == 'index.html':
+            existing_aliases.add(output.relative_to(OUT).as_posix().removesuffix('index.html'))
     home = soup(fetch(SITE))
     menu = home.select_one('#sobi-mega')
     groups = {
         route(link['href']) for link in menu.select('a[href]')
         if urlsplit(link['href']).path.strip('/') not in ('', 'san-pham')
     }
-    products = {r for r in exports if r.startswith('mau-tui/')}
-    paths = sorted(groups | products | {'san-pham/'})
-    known.update(exports.keys() | groups)
+    products = set(route_manifest['products']) if route_manifest else {r for r in exports if r.startswith('mau-tui/')}
+    categories = set(route_manifest['categories']) if route_manifest else groups
+    paths = sorted(categories | products | {'san-pham/'})
+    redirects = route_manifest['aliases'].copy() if route_manifest else {}
+    for path in existing_aliases:
+        redirects.setdefault(path, 'san-pham/')
+    if any(not urlsplit(target).path for target in redirects.values()):
+        raise RuntimeError('The catalogue route manifest contains an empty alias destination.')
+    for path in paths:
+        redirects.pop(path, None)
+    for path in exports:
+        if route_manifest and path.startswith(('danh-muc-san-pham/', 'mau-tui/')) and path not in paths:
+            redirects.setdefault(path, 'san-pham/')
+    for path in redirects:
+        exports.pop(path, None)
+    known.update(exports.keys() | set(paths) | {'search/'})
     with ThreadPoolExecutor(max_workers=5) as pool:
         snapshots = dict(zip(paths, pool.map(lambda path: soup(fetch_bytes(SITE + path)), paths)))
 
@@ -368,6 +400,8 @@ def sync_catalogue():
             yield soup(fetch(link['href'].split('#')[0]))
 
     def archive_snapshot(main, path):
+        if not main.select_one('.sobi-archive'):
+            return
         grid = main.select_one('#sobi-archive-results .sobi-product-grid')
         if grid is None:
             return
@@ -378,17 +412,22 @@ def sync_catalogue():
             for card in page.select('#sobi-archive-results .sobi-product-card'):
                 grid.append(card.extract())
         cards = {route(card.select_one('a')['href']): card for card in grid.select('.sobi-product-card')}
-        for card in cards.values():
-            card['data-archive-options'] = []
-        # Snapshot the same product membership as the public WooCommerce archive.
-        for field in main.select('.sobi-archive-options input'):
-            query = urlencode({field['name']: field['value']})
-            filtered = soup(fetch(source_url + '?' + query))
-            for page in catalogue_pages(filtered):
-                for anchor in page.select('#sobi-archive-results .sobi-product-card a.sobi-product-card-link'):
-                    key = route(anchor['href'])
-                    if key in cards:
-                        cards[key]['data-archive-options'].append(field['value'])
+        if route_manifest:
+            for card in cards.values():
+                card['data-archive-options'] = card.attrs.pop('data-catalogue-options', '')
+        else:
+            for card in cards.values():
+                card['data-archive-options'] = []
+            for field in main.select('.sobi-archive-options input'):
+                query = urlencode({field['name']: field['value']})
+                filtered = soup(fetch(source_url + '?' + query))
+                for page in catalogue_pages(filtered):
+                    for anchor in page.select('#sobi-archive-results .sobi-product-card a.sobi-product-card-link'):
+                        key = route(anchor['href'])
+                        if key in cards:
+                            cards[key]['data-archive-options'].append(field['value'])
+            for card in cards.values():
+                card['data-archive-options'] = ' '.join(card['data-archive-options'])
         popular = soup(fetch(source_url + '?sort=popular'))
         order = 0
         for page in catalogue_pages(popular):
@@ -400,18 +439,35 @@ def sync_catalogue():
         # The browser provides pagination and sort/view URLs for static hosting.
         for nav in main.select('#sobi-archive-results .sobi-pagination'):
             nav.decompose()
-        for card in cards.values():
-            card['data-archive-options'] = ' '.join(card['data-archive-options'])
 
     data_file = OUT / 'assets/js/data.js'
     data = json.loads(data_file.read_text(encoding='utf-8').split(' = ', 1)[1].rstrip(';\n'))
     search = {entry['route']: entry for entry in data['search']}
-    for page in [snapshots['san-pham/'], soup(fetch(SITE + 'san-pham/?trang=2'))]:
+    catalog = snapshots['san-pham/']
+    next_pages = dict.fromkeys(link['href'] for link in catalog.select('.sobi-catalog .sobi-pagination a[href]'))
+    fresh_products = {}
+    for page in [catalog, *(soup(fetch(url)) for url in next_pages)]:
         for card in page.select('.sobi-catalog .sobi-product-card'):
             key = route(card.select_one('a')['href'])
-            for entry in data['products']:
-                if entry['route'] == key:
-                    entry['html'] = str(rewrite_tree(soup(str(card)), template=True))
+            html = str(rewrite_tree(soup(str(card)), template=True))
+            if route_manifest:
+                code = card.select_one('.sobi-product-code')
+                fresh_products[key] = {'route': key, 'title': card.select_one('h2,h3').get_text(' ', strip=True),
+                                       'code': code.get_text(strip=True) if code else '', 'html': html,
+                                       'options': card.get('data-catalogue-options', '').split()}
+            else:
+                for entry in data['products']:
+                    if entry['route'] == key:
+                        entry['html'] = html
+    if route_manifest:
+        data['products'] = list(fresh_products.values())
+        if set(fresh_products) != products:
+            raise RuntimeError(f'Catalogue listing and route manifest differ: {set(fresh_products) ^ products}')
+        data.pop('catalogGroups', None)
+        data['catalogueAliases'] = route_manifest['groups']
+        search = {key: value for key, value in search.items() if key not in redirects}
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        list(pool.map(lambda pair: archive_snapshot(pair[1].select_one('main'), pair[0]), snapshots.items()))
 
     for path, snapshot in snapshots.items():
         output, demo = exports.get(path, (OUT / path / 'index.html', None))
@@ -424,8 +480,6 @@ def sync_catalogue():
             'route': path, 'title': main.select_one('h1').get_text(' ', strip=True),
             'text': main.get_text(' ', strip=True)[:25000],
         }
-        if main.select_one('.sobi-archive'):
-            archive_snapshot(main, path)
         stabilize_builder_ids(main, 'sobi-demo-layout')
         for tag in main.select('script, #wpadminbar, .post-edit-link, link, meta'):
             tag.decompose()
@@ -475,6 +529,8 @@ def sync_catalogue():
         existing = demo.select_one('#sobi-mega')
         if path not in snapshots and existing:
             existing.replace_with(rewrite_tree(soup(str(menu)).find(), path))
+        if route_manifest and path not in snapshots and demo.select_one('#footer'):
+            demo.select_one('#footer').replace_with(rewrite_tree(soup(str(home.select_one('#footer'))).find(), path))
         for form in demo.select('#header form.searchform'):
             form['action'] = rewrite_url(SITE + 'search/', path)
         for tag in demo.select('head link[rel="stylesheet"], script[src]'):
@@ -483,10 +539,25 @@ def sync_catalogue():
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_bytes(render_static_html(demo).encode('utf-8'))
 
+    for path, destination in sorted(redirects.items()):
+        url = rewrite_url(SITE + destination, path)
+        alias = soup('<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Trang Sobi đã chuyển</title></head><body><p><a id="catalogue-destination">Mở trang mới trên Sobi</a></p></body></html>')
+        alias.select_one('a')['href'] = url
+        alias.head.append(alias.new_tag('link', rel='canonical', href=url))
+        script = alias.new_tag('script', src=versioned_asset(path, 'assets/js/catalogue-redirect.js'), defer='')
+        alias.body.append(script)
+        output = OUT / path / 'index.html'
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(render_static_html(alias).encode('utf-8'))
+
     manifest_file = OUT / 'docs/content-manifest.json'
     manifest = json.loads(manifest_file.read_text(encoding='utf-8'))
     manifest['generated'] = datetime.date.today().isoformat()
     manifest['pages'] = sorted(str(output.relative_to(OUT).as_posix()) for output, _ in exports.values())
+    if route_manifest:
+        manifest['catalogue_redirects'] = sorted(redirects)
+        manifest['products'] = len(products)
+        manifest['product_categories'] = len(categories)
     manifest['media_files'] = sum(asset.is_file() for asset in (OUT / 'assets/media').rglob('*'))
     manifest_file.write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
     print(f'Synchronized {len(paths)} catalogue pages and shared navigation across {len(exports)} pages.')

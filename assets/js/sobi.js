@@ -1,5 +1,19 @@
 (() => {
   "use strict";
+  function revealCatalogueSelection() {
+    document.querySelectorAll('.sobi-filter-stack > .sobi-filter').forEach((rail) => {
+      const active = rail.querySelector('.is-active');
+      if (!active || rail.scrollWidth <= rail.clientWidth) return;
+      const bounds = rail.getBoundingClientRect();
+      const tab = active.getBoundingClientRect();
+      if (tab.left >= bounds.left + 2 && tab.right <= bounds.right - 2) return;
+      rail.scrollLeft += tab.left - bounds.left - (bounds.width - tab.width) / 2;
+    });
+  }
+  // DOMContentLoaded also covers the tabs rebuilt by the static demo.
+  document.addEventListener('DOMContentLoaded', revealCatalogueSelection);
+  window.addEventListener('pageshow', revealCatalogueSelection);
+  document.fonts?.ready.then(revealCatalogueSelection);
   const inBuilder = new URLSearchParams(location.search).has('uxb_iframe');
   if (inBuilder) document.body.classList.add('sobi-builder-preview');
   const showVideoStatus = (container, message) => {

@@ -65,10 +65,11 @@
   searchInput.value = search;
   const selected = new Map();
   for (const checkbox of form.querySelectorAll('input[type="checkbox"]')) {
-    checkbox.checked = params.getAll(checkbox.name).includes(checkbox.value);
+    const key = checkbox.name.replace(/\[\]$/, '');
+    checkbox.checked = [...params.getAll(checkbox.name), ...params.getAll(key)].includes(checkbox.value);
     if (checkbox.checked) {
       const group = selected.get(checkbox.name) ?? [];
-      group.push(checkbox.value);
+      group.push(data.catalogueAliases ? `${key}=${checkbox.value}` : checkbox.value);
       selected.set(checkbox.name, group);
     }
   }
@@ -80,7 +81,7 @@
   const cleanUrl = new URL(form.action, document.baseURI);
   const baseUrl = new URL(cleanUrl);
   for (const [key, values] of selected) {
-    for (const value of values) baseUrl.searchParams.append(key, value);
+    for (const value of values) baseUrl.searchParams.append(key, data.catalogueAliases ? value.slice(value.indexOf('=') + 1) : value);
   }
   if (search) baseUrl.searchParams.set('tim_mau', search);
   if (sort.value !== 'newest') {

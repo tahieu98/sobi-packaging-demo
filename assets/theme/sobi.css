@@ -765,40 +765,44 @@
   color: var(--sobi-orange);
 }
 
-/* Order 39: each catalogue level is its own sideways rail on mobile. */
-@media (max-width: 767px) {
-  .sobi-catalog .sobi-filter-stack { grid-template-columns: minmax(0, 1fr); }
-  .sobi-catalog .sobi-filter-stack > .sobi-filter {
-    flex-wrap: nowrap;
-    gap: 8px;
-    min-width: 0;
-    overflow-x: auto;
-    padding: 4px 3px 7px;
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-  }
-  .sobi-site .sobi-catalog .sobi-filter .sobi-filter-tab {
-    flex: 0 0 auto;
-    min-height: 44px;
-    padding: 8px 12px;
-    border: 1px solid var(--sobi-purple);
-    border-radius: 8px;
-    background: var(--sobi-purple);
-    color: #fff;
-    font-weight: 600;
-    line-height: 1.35;
-    white-space: nowrap;
-    scroll-snap-align: start;
-  }
-  .sobi-site .sobi-catalog .sobi-filter .sobi-filter-tab:is(.is-active, :active, :focus-visible) {
-    border-color: var(--sobi-orange);
-    background: var(--sobi-orange);
-    color: var(--sobi-purple);
-  }
-  .sobi-site .sobi-catalog .sobi-filter .sobi-filter-tab:focus-visible {
-    outline: 2px solid var(--sobi-purple);
-    outline-offset: 2px;
-  }
+.sobi-filter-caption {
+  margin: 6px 3px 0 !important;
+  color: var(--sobi-purple);
+  font-size: var(--sobi-text-small);
+  font-weight: 600;
+}
+.sobi-archive-navigation { margin-top: 12px; }
+.sobi-catalog .sobi-filter-stack {
+  grid-template-columns: minmax(0, 1fr);
+}
+.sobi-catalog .sobi-filter-stack > .sobi-filter {
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 4px 3px 7px;
+  scrollbar-width: thin;
+}
+.sobi-site .sobi-catalog .sobi-filter .sobi-filter-tab {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--sobi-purple);
+  border-radius: 8px;
+  background: var(--sobi-purple);
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.sobi-site .sobi-catalog .sobi-filter .sobi-filter-tab:is(.is-active, :hover, :active, :focus-visible) {
+  border-color: var(--sobi-orange);
+  background: var(--sobi-orange);
+  color: var(--sobi-purple);
+}
+.sobi-site .sobi-catalog .sobi-filter .sobi-filter-tab:focus-visible {
+  outline: 2px solid var(--sobi-purple);
+  outline-offset: 2px;
 }
 
 .sobi-catalog-search {

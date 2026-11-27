@@ -6,7 +6,13 @@
   const route = document.querySelector('meta[name="sobi-route"]').content;
   const urlFor = (path = '', params = {}) => {
     const url = new URL(`${path}index.html`, root);
-    for (const [key, value] of Object.entries(params)) if (value && String(value) !== '1') url.searchParams.set(key, value);
+    for (const [key, value] of Object.entries(params)) {
+      if (Array.isArray(value)) {
+        for (const item of value) url.searchParams.append(key, item);
+      } else if (value && (key !== 'trang' || String(value) !== '1')) {
+        url.searchParams.set(key, value);
+      }
+    }
     return url.href;
   };
   const escape = (text) => String(text).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -26,6 +32,23 @@
   const pagination = (count, page, path, filters, label) => count > 1 ? `<nav class="sobi-pagination" aria-label="${label}">${Array.from({length:count},(_,i)=>`<a href="${urlFor(path,{...filters,trang:String(i+1)})}" ${i+1===page?'aria-current="page"':''}>${i+1}</a>`).join('')}</nav>` : '';
   const empty = (message, path, title = 'Xem tất cả') => `<div class="sobi-demo-empty"><p>${escape(message)}</p><a class="button primary" href="${urlFor(path)}">${title}</a></div>`;
   const catalog = document.querySelector('.sobi-catalog');
+  if (route === 'san-pham/' && data.catalogueAliases) {
+    const previous = new URL(location.href);
+    const group = previous.searchParams.get('nhom');
+    if (group && Object.hasOwn(data.catalogueAliases, group)) {
+      const destination = new URL(data.catalogueAliases[group], root);
+      destination.pathname += 'index.html';
+      previous.searchParams.delete('nhom');
+      for (const key of new Set(previous.searchParams.keys())) {
+        const name = key === 'tim' ? 'tim_mau' : key;
+        if (destination.searchParams.has(name)) continue;
+        for (const value of previous.searchParams.getAll(key)) destination.searchParams.append(name, value);
+      }
+      destination.hash = previous.hash;
+      location.replace(destination.href);
+      return;
+    }
+  }
   const renderCatalog = () => {
     if (!catalog || route !== 'san-pham/') return;
     const params = new URLSearchParams(location.search);
@@ -33,20 +56,45 @@
     const groups = data.catalogGroups || [];
     const top = groups.find(item => item.slug === group || item.children.some(child => child.slug === group));
     const inGroup = item => !group || (item.productCategories || [item.category]).some(slug => slug === group || (top?.slug === group && top.children.some(child => child.slug === slug)));
-    const results = data.products.filter(item => inGroup(item) && normalize(`${item.title} ${item.code}`).includes(normalize(search)));
+    const selected = {};
+    const filterForm = catalog.querySelector('.sobi-catalogue-facets form');
+    if (filterForm) {
+      for (const input of filterForm.querySelectorAll('input[type="checkbox"]')) {
+        const key = input.name.replace(/\[\]$/, '');
+        input.checked = [...params.getAll(input.name), ...params.getAll(key)].includes(input.value);
+        if (input.checked) (selected[input.name] ??= []).push(input.value);
+      }
+      const selectedCount = Object.values(selected).reduce((sum, values) => sum + values.length, 0);
+      filterForm.parentElement.querySelector('summary').textContent = 'Bộ lọc sản phẩm' + (selectedCount ? ` (${selectedCount})` : '');
+      if (selectedCount) filterForm.parentElement.open = true;
+      filterForm.elements.tim.value = search;
+      filterForm.querySelector('.sobi-catalogue-facet-actions a').href = urlFor('san-pham/', {tim: search});
+    }
+    const matchedFacets = item => Object.entries(selected).every(([key, values]) =>
+      values.some(value => item.options?.includes(`${key.replace(/\[\]$/, '')}=${value}`)));
+    const results = data.products.filter(item => inGroup(item) && matchedFacets(item) && normalize(`${item.title} ${item.code}`).includes(normalize(search)));
     const pageCount = Math.ceil(results.length / 8);
     const valid = page > 0 && (page === 1 || page <= pageCount);
     catalog.querySelector('.sobi-result-count').textContent = `${results.length} mẫu sản phẩm${search ? ` cho “${search}”` : ''}`;
     catalog.querySelector('.sobi-result-count').setAttribute('role','status');
     catalog.querySelector('.sobi-product-grid').innerHTML = valid && results.length ? results.slice((page-1)*8,page*8).map(item=>fillTemplate(item.html)).join('') : empty(valid ? 'Chưa có mẫu phù hợp. Thử tên, mã mẫu hoặc nhóm khác.' : 'Trang sản phẩm này không tồn tại.', 'san-pham/');
     catalog.querySelectorAll('.sobi-pagination').forEach(el=>el.remove());
-    catalog.insertAdjacentHTML('beforeend',pagination(pageCount,page,'san-pham/',{tim:search,nhom:group},'Trang sản phẩm'));
+    catalog.insertAdjacentHTML('beforeend',pagination(pageCount,page,'san-pham/',{tim:search,nhom:group,...selected},'Trang sản phẩm'));
     // Order 38: level-1 groups mirror the header "Danh mục"; a selected group adds its level-2 bar.
     const filterLink = (level, id, slug, label, active, current = active) => `<a id="sobi-filter-${level}-${escape(id)}" class="sobi-filter-tab${active ? ' is-active' : ''}"${current ? ' aria-current="page"' : ''} href="${escape(urlFor('san-pham/',{nhom:slug,tim:search}))}">${escape(label)}</a>`;
     const stack = catalog.querySelector('.sobi-filter-stack');
     if (stack && groups.length) {
       stack.innerHTML = `<nav class="sobi-filter" aria-label="Nhóm sản phẩm">${filterLink('top','all','','Tất cả',!group)}${groups.map(item=>filterLink('top',item.slug,item.slug,item.label,top===item,group===item.slug)).join('')}</nav>`
         + (top && top.children.length ? `<nav class="sobi-filter sobi-filter--sub" aria-label="Danh mục thứ cấp">${filterLink('sub','all',top.slug,'Tất cả',group===top.slug)}${top.children.map(child=>filterLink('sub',child.slug,child.slug,child.label,group===child.slug)).join('')}</nav>` : '');
+    }
+    if (stack && data.catalogueAliases) {
+      for (const link of stack.querySelectorAll('.sobi-filter-tab[href]')) {
+        const target = new URL(link.href);
+        const parameter = target.pathname === new URL('san-pham/index.html', root).pathname ? 'tim' : 'tim_mau';
+        if (search) target.searchParams.set(parameter, search);
+        else target.searchParams.delete(parameter);
+        link.href = target.href;
+      }
     }
     catalog.querySelector('input[name="tim"]').value = search;
   };

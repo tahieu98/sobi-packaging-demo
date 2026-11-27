@@ -345,6 +345,31 @@
 }
 .sobi-archive-empty a { text-decoration: underline; }
 .sobi-archive-editorial { width: min(100% - 32px, 740px); margin: 28px auto 0; }
+
+.sobi-catalogue-facets {
+  margin: 0 0 16px;
+}
+.sobi-catalogue-facets > summary {
+  color: var(--sobi-purple);
+  cursor: pointer;
+  font-weight: 700;
+  padding-block: 10px;
+}
+.sobi-catalogue-facet-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 12px;
+}
+.sobi-catalogue-facet-fields fieldset {
+  min-width: 0;
+}
+.sobi-catalogue-facet-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+.sobi-catalogue-facet-actions .button { margin: 0; }
 .sobi-archive-results { scroll-margin-top: 80px; min-width: 0; }
 .sobi-archive-results .sobi-pagination { margin-top: 18px; }
 

@@ -17,7 +17,7 @@ Nhấp đúp `Start-Demo.command` để mở preview bằng Terminal trên macOS
 
 ## Nội dung và tương tác
 
-69 tệp HTML, gồm 67 trang đã có và hai trang chi tiết mẫu QA Order 39. Trang Sản phẩm có thêm 25 mẫu tổng hợp gắn nhãn `[QA Order 39]` để thử danh mục và bộ lọc; các mẫu này không phải sản phẩm thương mại. Bản đồ đầy đủ ở [manifest](docs/content-manifest.json).
+Order 40 xuất 17 danh mục WooCommerce và 33 mẫu sản phẩm, gồm 24 mẫu demo và chín mẫu có sẵn. Các danh mục và mẫu mới có thumbnail, mô tả và thông tin quy cách minh họa. Trang sản phẩm dùng `san-pham/{slug}/index.html`, danh mục con đi theo đường dẫn cha. Các đường dẫn cũ có trang chuyển hướng. [Manifest](docs/content-manifest.json).
 
 - Header/mobile menu, menu danh mục WooCommerce, điều khiển bằng phím/Escape, link social và nút về đầu trang.
 - Trang Sản phẩm: tìm tên/mã, tìm không dấu, thanh danh mục cấp 1 (7 nhóm như menu Danh mục) và cấp 2 khi chọn nhóm, phân trang 8 mẫu/trang và trạng thái rỗng. Dữ liệu nhóm ở `catalogGroups` trong `assets/js/data.js`.
@@ -39,9 +39,9 @@ Form báo giá chỉ dựng bản tóm tắt trên thiết bị, không gửi em
 - `assets/media/`: media công khai được trang tham chiếu, bao gồm MP4.
 - `assets/js/sobi.js`: tương tác giao diện từ dự án, đã bỏ gửi báo giá đến server.
 - `assets/js/demo.js`: bộ lọc/tìm/phân trang/form/bình luận mô phỏng.
-- `assets/js/category-archive.js` áp dụng bộ lọc danh mục cấp cha từ URL, HTML đã xuất và dữ liệu tổng hợp. Order 39 thêm nhóm **Màu sắc**; kết hợp nhiều màu bằng **hoặc**, kết hợp màu và chất liệu bằng **và**. Để thử, mở **Túi cửa sổ** và chọn **Trắng + Kraft** (`QA-O39-06`).
+- `assets/js/category-archive.js` lọc danh mục từ URL và dữ liệu xuất từ WooCommerce. Có thể kết hợp **Kiểu túi giấy** và **Ngành hàng**. [Xem ví dụ Kraft và nông sản](tui-giay/index.html?kieu=tui-kraft&nganh=nong-san-trai-cay-hat).
 - `assets/js/data.js`: dữ liệu công khai của sản phẩm/bài viết/trang.
-- `tools/serve.py`: preview tùy chọn; `tools/export_demo.py`: công cụ tái xuất tùy chọn, cần beautifulsoup4 và website nguồn đang chạy. Khi tái xuất toàn bộ, đối chiếu và giữ riêng 25 mẫu Order 39 trong `assets/js/data.js` cùng hai trang chi tiết QA: dữ liệu này không còn trong catalogue công khai của WordPress.
+- `tools/serve.py` mở bản xem trước. `tools/export_demo.py --sync-catalogue --catalogue-routes routes.json` đồng bộ catalogue từ website WordPress đang chạy và cần beautifulsoup4. Tạo `routes.json` bằng chế độ `export` của migration Order 40 trong repo WordPress. Các chức năng nhập và biên tập chạy trong CMS WordPress.
 - `docs/github-pages-costs.md`: nghiên cứu chi phí và các phương án xuất bản.
 - `docs/pages-workflow.yml.example`: workflow GitHub Pages mẫu, chưa được kích hoạt.
 
