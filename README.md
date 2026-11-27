@@ -25,6 +25,7 @@ Order 41 dùng nhóm thẻ có ảnh cho điều hướng cấp thứ hai ở tr
 - Breadcrumb hiển thị trên một dòng và cuộn ngang khi thiếu chỗ. [Xem trang sản phẩm mẫu](san-pham/demo-bao-bi-gap-theo-kich-thuoc-bo-qua/index.html).
 - Trang Sản phẩm có thanh danh mục cấp 1, tìm theo tên hoặc mã, phân trang 8 mẫu và trạng thái rỗng. Mở danh mục để xem các nhóm thẻ cấp tiếp theo.
 - Danh mục cấp cha có cột lọc trên PC, bảng lọc trên tablet và mobile, lưới 4/3/2 cột, sắp xếp và chế độ danh sách. Bộ lọc dùng dữ liệu catalogue đã xuất và chạy trong trình duyệt.
+- **Khám phá danh mục cùng nhóm** dùng thẻ có ảnh WooCommerce, dàn một hàng và cuộn ngang khi thiếu chỗ. [Hộp quà](hop-qua/index.html).
 - Chi tiết mẫu: phóng ảnh, thông số, FAQ, chia sẻ/copy link, CTA điền sẵn tên mẫu.
 - Giấy kraft: các anchor, bảng so sánh cuộn ngang trong khung và FAQ đóng/mở.
 - Blog: 18 bài, lọc chuyên mục, tìm nội dung, phân trang 6 bài/trang, mục lục, bài liên quan và chia sẻ.
