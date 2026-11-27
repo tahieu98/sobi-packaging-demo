@@ -447,6 +447,14 @@
   .sobi-subcategory-links { grid-auto-columns: minmax(166px, calc((100% - 24px) / 3)); }
 }
 @media (max-width: 767px) {
-  .sobi-subcategory-links { grid-auto-columns: minmax(166px, calc((100% - 12px) / 2)); }
+  .sobi-subcategory-links {
+    grid-auto-columns: minmax(166px, calc((100% - 12px) / 2));
+    padding-bottom: 7px;
+  }
+  .sobi-subcategory-links::-webkit-scrollbar { height: 5px; }
+  .sobi-subcategory-links::-webkit-scrollbar-thumb { background-color: #8b8b8b; }
+  @supports not selector(::-webkit-scrollbar) {
+    .sobi-subcategory-links { scrollbar-width: thin; scrollbar-color: #8b8b8b transparent; }
+  }
   .sobi-subcategory-thumb { width: 52px; height: 52px; }
 }
