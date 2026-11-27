@@ -355,6 +355,21 @@
 }
 
 /* Order 8: native Builder landing pages for secondary product categories. */
+.sobi-category-seo-article {
+  display: flow-root;
+  margin-block: 28px 0;
+  padding: clamp(16px, 2.4vw, 32px);
+  border: 1px solid var(--archive-border, #e4dce9);
+  border-radius: 8px;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+.sobi-category-seo-body { display: flow-root; }
+.sobi-category-seo-body > :last-child { margin-bottom: 0; }
+.sobi-category-seo-body :is(img, figure, .wp-caption) { max-width: 100%; }
+.sobi-category-seo-body img { height: auto; }
+.sobi-category-seo-body pre { overflow: auto; }
+
 .sobi-subcategory-hero { background: #f5f6f2; padding-block: 48px; }
 .sobi-site .sobi-subcategory-hero h1 { font-size: clamp(32px, 3.1vw, 44px); line-height: 1.22; }
 .sobi-subcategory-lead { max-width: 680px; font-size: 18px; line-height: 1.7; }

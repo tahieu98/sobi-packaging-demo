@@ -337,14 +337,47 @@
 .sobi-archive-list .sobi-product-image { align-self: center; }
 .sobi-archive-list .sobi-product-card-link:has(.sobi-product-image--empty) { display: block; }
 .sobi-archive-empty,
-.sobi-archive-editorial {
-  padding: 22px;
+.sobi-archive-description,
+.sobi-archive-ux-block {
   border: 1px solid var(--archive-border);
   border-radius: 8px;
   background: #fff;
 }
+.sobi-archive-empty { padding: 22px; }
+.sobi-archive-description { padding: clamp(16px, 2.4vw, 32px); }
+.sobi-archive-description,
+.sobi-archive-ux-block { margin-top: 28px; }
 .sobi-archive-empty a { text-decoration: underline; }
-.sobi-archive-editorial { width: min(100% - 32px, 740px); margin: 28px auto 0; }
+
+.sobi-archive-ux-block > section:first-child { border-radius: 7px 7px 0 0; }
+.sobi-archive-ux-block > section:last-child { border-radius: 0 0 7px 7px; }
+.sobi-archive-ux-block > .section > .section-content > .row { max-width: 100%; }
+.sobi-archive-ux-block .sobi-subcategory-hero > .section-content > .row > .col:first-child > .col-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+}
+.sobi-archive-ux-block .sobi-subcategory-hero .col-inner > :not(.button) { flex-basis: 100%; }
+.sobi-site .sobi-archive-ux-block .sobi-subcategory-hero .col-inner > .button {
+  max-width: 100%;
+  margin: 0;
+  white-space: normal;
+}
+.sobi-archive-ux-block .sobi-subcategory-points > .section-content > .row + .row:has(> .col.medium-4) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+  gap: clamp(12px, 2vw, 24px);
+  padding-inline: 15px;
+}
+.sobi-archive-ux-block .sobi-subcategory-points > .section-content > .row + .row:has(> .col.medium-4)::after {
+  display: none;
+}
+.sobi-archive-ux-block .sobi-subcategory-points > .section-content > .row + .row:has(> .col.medium-4) > .col {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
 
 .sobi-catalogue-facets {
   margin: 0 0 16px;
