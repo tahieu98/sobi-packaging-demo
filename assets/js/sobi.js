@@ -1,13 +1,13 @@
 (() => {
   "use strict";
   function revealCatalogueSelection() {
-    document.querySelectorAll('.sobi-filter-stack > .sobi-filter').forEach((rail) => {
-      const active = rail.querySelector('.is-active');
+    document.querySelectorAll('.sobi-filter-stack > .sobi-filter, nav.sobi-archive-subcats').forEach((rail) => {
+      const active = rail.querySelector('.is-active, .sobi-archive-category-card[aria-current]');
       if (!active || rail.scrollWidth <= rail.clientWidth) return;
       const bounds = rail.getBoundingClientRect();
-      const tab = active.getBoundingClientRect();
-      if (tab.left >= bounds.left + 2 && tab.right <= bounds.right - 2) return;
-      rail.scrollLeft += tab.left - bounds.left - (bounds.width - tab.width) / 2;
+      const item = active.getBoundingClientRect();
+      if (item.left >= bounds.left + 2 && item.right <= bounds.right - 2) return;
+      rail.scrollLeft += item.left - bounds.left - (bounds.width - item.width) / 2;
     });
   }
   // DOMContentLoaded also covers the tabs rebuilt by the static demo.

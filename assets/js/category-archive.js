@@ -63,6 +63,13 @@
   const normalize = value => value.normalize('NFD').replace(/\p{M}/gu, '').replace(/đ/gi, 'd').toLocaleLowerCase('vi').trim();
   const search = (params.get('tim_mau') || '').slice(0, 100);
   searchInput.value = search;
+  if (search) {
+    for (const link of archive.querySelectorAll('nav.sobi-archive-subcats .sobi-archive-category-card')) {
+      const target = new URL(link.href);
+      target.searchParams.set('tim_mau', search);
+      link.href = target.href;
+    }
+  }
   const selected = new Map();
   for (const checkbox of form.querySelectorAll('input[type="checkbox"]')) {
     const key = checkbox.name.replace(/\[\]$/, '');

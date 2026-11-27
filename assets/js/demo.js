@@ -80,12 +80,10 @@
     catalog.querySelector('.sobi-product-grid').innerHTML = valid && results.length ? results.slice((page-1)*8,page*8).map(item=>fillTemplate(item.html)).join('') : empty(valid ? 'Chưa có mẫu phù hợp. Thử tên, mã mẫu hoặc nhóm khác.' : 'Trang sản phẩm này không tồn tại.', 'san-pham/');
     catalog.querySelectorAll('.sobi-pagination').forEach(el=>el.remove());
     catalog.insertAdjacentHTML('beforeend',pagination(pageCount,page,'san-pham/',{tim:search,nhom:group,...selected},'Trang sản phẩm'));
-    // Order 38: level-1 groups mirror the header "Danh mục"; a selected group adds its level-2 bar.
-    const filterLink = (level, id, slug, label, active, current = active) => `<a id="sobi-filter-${level}-${escape(id)}" class="sobi-filter-tab${active ? ' is-active' : ''}"${current ? ' aria-current="page"' : ''} href="${escape(urlFor('san-pham/',{nhom:slug,tim:search}))}">${escape(label)}</a>`;
+    const filterLink = (id, slug, label, active, current = active) => `<a id="sobi-filter-top-${escape(id)}" class="sobi-filter-tab${active ? ' is-active' : ''}"${current ? ' aria-current="page"' : ''} href="${escape(urlFor('san-pham/',{nhom:slug,tim:search}))}">${escape(label)}</a>`;
     const stack = catalog.querySelector('.sobi-filter-stack');
     if (stack && groups.length) {
-      stack.innerHTML = `<nav class="sobi-filter" aria-label="Nhóm sản phẩm">${filterLink('top','all','','Tất cả',!group)}${groups.map(item=>filterLink('top',item.slug,item.slug,item.label,top===item,group===item.slug)).join('')}</nav>`
-        + (top && top.children.length ? `<nav class="sobi-filter sobi-filter--sub" aria-label="Danh mục thứ cấp">${filterLink('sub','all',top.slug,'Tất cả',group===top.slug)}${top.children.map(child=>filterLink('sub',child.slug,child.slug,child.label,group===child.slug)).join('')}</nav>` : '');
+      stack.innerHTML = `<nav class="sobi-filter" aria-label="Nhóm sản phẩm">${filterLink('all','','Tất cả',!group)}${groups.map(item=>filterLink(item.slug,item.slug,item.label,top===item,group===item.slug)).join('')}</nav>`;
     }
     if (stack && data.catalogueAliases) {
       for (const link of stack.querySelectorAll('.sobi-filter-tab[href]')) {

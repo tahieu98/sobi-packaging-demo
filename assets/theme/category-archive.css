@@ -213,7 +213,7 @@
   line-height: 1.35;
   transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
 }
-.sobi-site .sobi-archive-subcats[aria-label="Danh mục con"] .sobi-archive-category-card:is(:focus-visible, :active, .is-pressed) {
+.sobi-site .sobi-archive-subcats[aria-label="Danh mục con"] .sobi-archive-category-card:is([aria-current], :focus-visible, :active, .is-pressed) {
   border-color: var(--sobi-orange, #f26921);
   background: var(--sobi-orange, #f26921);
   color: var(--archive-ink);
