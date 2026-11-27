@@ -439,6 +439,19 @@
 @media (max-width: 767px) {
   .sobi-archive { padding-top: 10px; }
   .sobi-archive-wrap { width: calc(100% - 32px); }
+  .sobi-archive-ux-block .sobi-subcategory-jump nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .sobi-site .sobi-archive-ux-block .sobi-subcategory-jump nav a {
+    min-height: 44px;
+    justify-content: center;
+    padding: 6px 8px;
+    border: 1px solid var(--archive-border);
+    border-radius: 6px;
+    text-align: center;
+  }
   .sobi-archive .sobi-category-intro,
   .sobi-archive .sobi-category-intro.has-gallery {
     grid-template-columns: minmax(0, 1fr);
@@ -464,6 +477,12 @@
   .sobi-archive .sobi-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .sobi-archive .sobi-product-card-info { padding-inline: 8px; }
   .sobi-archive .sobi-card-meta { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 359px) {
+  .sobi-archive-ux-block .sobi-subcategory-jump nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
