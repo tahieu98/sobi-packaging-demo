@@ -46,6 +46,8 @@ Form báo giá chỉ dựng bản tóm tắt trên thiết bị, không gửi em
 - `assets/js/category-archive.js` lọc danh mục từ URL và dữ liệu xuất từ WooCommerce. Có thể kết hợp **Kiểu túi giấy** và **Ngành hàng**. [Xem ví dụ Kraft và nông sản](tui-giay/index.html?kieu=tui-kraft&nganh=nong-san-trai-cay-hat).
 - `assets/js/data.js`: dữ liệu công khai của sản phẩm/bài viết/trang.
 - `tools/serve.py` mở bản xem trước. `tools/export_demo.py --sync-catalogue --catalogue-routes routes.json` đồng bộ catalogue từ website WordPress đang chạy và cần beautifulsoup4. Tạo `routes.json` bằng chế độ `export` của migration Order 40 trong repo WordPress. Các chức năng nhập và biên tập chạy trong CMS WordPress.
+
+Order 45 xuất các nhóm, nhãn và lựa chọn bộ lọc đã cấu hình cho từng danh mục trong WordPress. JavaScript lọc các mẫu bằng khóa lựa chọn xuất cùng trang. Sau khi lưu thay đổi trong CMS, chạy lại lệnh đồng bộ catalogue để các trang demo nhận cấu hình mới.
 - `docs/github-pages-costs.md`: nghiên cứu chi phí và các phương án xuất bản.
 - `docs/pages-workflow.yml.example`: workflow GitHub Pages mẫu, chưa được kích hoạt.
 

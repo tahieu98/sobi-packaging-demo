@@ -412,13 +412,16 @@ def sync_catalogue():
             for card in page.select('#sobi-archive-results .sobi-product-card'):
                 grid.append(card.extract())
         cards = {route(card.select_one('a')['href']): card for card in grid.select('.sobi-product-card')}
+        fields = main.select('.sobi-archive-options input[type="checkbox"]')
         if route_manifest:
+            exposed_tokens = {f"{field['name'].removesuffix('[]')}={field['value']}" for field in fields}
             for card in cards.values():
-                card['data-archive-options'] = card.attrs.pop('data-catalogue-options', '')
+                tokens = card.attrs.pop('data-catalogue-options', '').split()
+                card['data-archive-options'] = ' '.join(token for token in tokens if token in exposed_tokens)
         else:
             for card in cards.values():
                 card['data-archive-options'] = []
-            for field in main.select('.sobi-archive-options input'):
+            for field in fields:
                 query = urlencode({field['name']: field['value']})
                 filtered = soup(fetch(source_url + '?' + query))
                 for page in catalogue_pages(filtered):
