@@ -1114,7 +1114,6 @@
   display: flex;
   gap: 12px;
   padding: 27px 0;
-  flex-wrap: wrap;
 }
 .sobi-breadcrumb a {
   display: inline-flex;
@@ -1127,10 +1126,14 @@
   background: var(--sobi-soft);
   border-bottom: 1px solid var(--sobi-line);
 }
-.sobi-breadcrumb-bar .sobi-breadcrumb { padding-block: 4px; }
+.sobi-breadcrumb-bar .sobi-breadcrumb {
+  padding-block: 4px;
+  overflow-x: auto;
+}
 .sobi-breadcrumb ol {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   align-items: center;
   gap: 0 8px;
   list-style: none;
@@ -1140,17 +1143,16 @@
 }
 .sobi-breadcrumb li {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 8px;
-  min-width: 0;
-  max-width: 100%;
   margin: 0;
-  overflow-wrap: anywhere;
 }
 .sobi-breadcrumb li + li::before { content: '/'; color: var(--sobi-muted); }
 .sobi-breadcrumb [aria-current="page"] { color: var(--sobi-purple); padding-block: 10px; }
 .sobi-breadcrumb a { color: var(--sobi-purple); }
 .sobi-breadcrumb a:hover { text-decoration: underline; }
+.sobi-breadcrumb a:focus-visible { outline-offset: -3px; }
 .sobi-editorial { padding-block: 36px; overflow-wrap: anywhere; }
 .sobi-editorial article { margin-bottom: 32px; }
 .sobi-auto-title { padding-block: 28px; }

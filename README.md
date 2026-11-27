@@ -22,6 +22,7 @@ Order 40 xuất 17 danh mục WooCommerce và 33 mẫu sản phẩm, gồm 24 m�
 Order 41 dùng nhóm thẻ có ảnh cho điều hướng cấp thứ hai ở trang cha, trang danh mục con và các trang phân trang. Dòng **Danh mục con của…** nằm ngay trên nhóm thẻ. [Bao bì khác](bao-bi-khac/index.html) · [Túi giấy kraft](tui-giay/tui-kraft/index.html).
 
 - Header/mobile menu, menu danh mục WooCommerce, điều khiển bằng phím/Escape, link social và nút về đầu trang.
+- Breadcrumb hiển thị trên một dòng và cuộn ngang khi thiếu chỗ. [Xem trang sản phẩm mẫu](san-pham/demo-bao-bi-gap-theo-kich-thuoc-bo-qua/index.html).
 - Trang Sản phẩm có thanh danh mục cấp 1, tìm theo tên hoặc mã, phân trang 8 mẫu và trạng thái rỗng. Mở danh mục để xem các nhóm thẻ cấp tiếp theo.
 - Danh mục cấp cha có cột lọc trên PC, bảng lọc trên tablet và mobile, lưới 4/3/2 cột, sắp xếp và chế độ danh sách. Bộ lọc dùng dữ liệu catalogue đã xuất và chạy trong trình duyệt.
 - Chi tiết mẫu: phóng ảnh, thông số, FAQ, chia sẻ/copy link, CTA điền sẵn tên mẫu.
