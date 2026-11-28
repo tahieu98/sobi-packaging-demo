@@ -1,5 +1,32 @@
 (() => {
   "use strict";
+  document.querySelectorAll('#main .sobi-page-title h1').forEach((heading) => {
+    if (heading.children.length) return;
+
+    const title = heading.textContent;
+    const breaks = [...title.matchAll(/[^.\s]\.(\s+)(?=[^\s.])/gu)];
+    if (!breaks.length) return;
+
+    const content = document.createDocumentFragment();
+    let start = 0;
+    const appendSentence = (end) => {
+      const sentence = document.createElement('span');
+      sentence.className = 'sobi-title-sentence';
+      sentence.textContent = title.slice(start, end);
+      content.append(sentence);
+    };
+
+    for (const match of breaks) {
+      const space = match[1];
+      const end = match.index + match[0].length - space.length;
+      appendSentence(end);
+      content.append(space);
+      start = end + space.length;
+    }
+    appendSentence(title.length);
+    heading.replaceChildren(content);
+  });
+
   function revealCatalogueSelection() {
     document.querySelectorAll('.sobi-filter-stack > .sobi-filter, nav.sobi-archive-subcats').forEach((rail) => {
       const active = rail.querySelector('.is-active, .sobi-archive-category-card[aria-current]');

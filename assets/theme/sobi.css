@@ -1011,6 +1011,14 @@
   font-size: 42px;
   margin: 0 0 18px;
 }
+.sobi-page-title .sobi-title-sentence {
+  display: inline-block;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 335px) {
+  .sobi-site #main .sobi-page-title h1:has(.sobi-title-sentence) { font-size: 30px; }
+}
 .sobi-page-title p:not(.sobi-eyebrow) {
   font-size: var(--sobi-text-small);
   color: var(--sobi-muted);
