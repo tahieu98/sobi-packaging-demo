@@ -655,6 +655,10 @@
   height: 100%;
   color: inherit;
 }
+.sobi-site .sobi-product-grid:not(.sobi-archive-list) .sobi-product-card-link {
+  display: flex;
+  flex-direction: column;
+}
 .sobi-site .sobi-product-card-link:hover {
   color: inherit;
 }
@@ -668,6 +672,17 @@
   border-radius: 6px;
   background: #fff;
   transition: transform 180ms ease, background-color 180ms ease;
+}
+.sobi-product-grid:not(.sobi-archive-list) .sobi-product-card-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  container-type: inline-size;
+  overflow-wrap: anywhere;
+}
+.sobi-product-grid:not(.sobi-archive-list) .sobi-card-meta {
+  margin-block-start: auto !important;
 }
 .sobi-product-card-link:is(:hover, :focus-visible, :active) .sobi-product-card-info,
 .sobi-product-card.is-pressed .sobi-product-card-info {
@@ -2749,6 +2764,12 @@
 .sobi-content-pagination { display: flex; flex-wrap: wrap; gap: 12px; padding-block: 20px; }
 .sobi-content-pagination :is(a,span) { padding: 6px 10px; }
 .sobi-site #main .sobi-product-card h2 { font-size: var(--sobi-heading-item); line-height: 1.45; margin: 0 0 7px; min-height: 40px; }
+.sobi-site #main .sobi-product-grid:not(.sobi-archive-list) .sobi-product-card-info > :is(h2, h3) {
+  font-size: 16px;
+  font-size: clamp(14px, 7.5cqi, var(--sobi-heading-item));
+  line-height: 1.4;
+  min-height: 0;
+}
 @media(max-width:1180px) { .sobi-blog-toolbar { flex-direction: column; } .sobi-blog-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media(max-width:549px) {
   .sobi-blog-grid { grid-template-columns: minmax(0,1fr); gap: 20px; }
@@ -2773,7 +2794,20 @@
 .sobi-team-profile .sobi-team-photo { aspect-ratio: 1; }
 .sobi-team-links { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 20px; }
 .sobi-team-links .button { margin: 0; min-height: 44px; }
-.sobi-team-bio { max-width: 68ch; }
+.sobi-team-profile .sobi-team-copy { align-self: center; }
+.sobi-team-bio {
+  grid-column: 1 / -1;
+  width: min(100%, 760px);
+  margin-inline: auto;
+  padding: clamp(20px, 4vw, 48px);
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.sobi-team-bio > :last-child { margin-bottom: 0; }
+.sobi-site #main .sobi-team-bio h2 {
+  font-size: clamp(21px, 3vw, 28px);
+  margin-block: 1.2em 0.35em;
+}
 @media (max-width: 991px) { .sobi-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 599px) {
   .sobi-team-grid, .sobi-team-profile { grid-template-columns: minmax(0, 1fr); }
