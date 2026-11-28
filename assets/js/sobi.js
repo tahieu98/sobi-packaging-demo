@@ -151,6 +151,22 @@
     try { await navigator.clipboard.writeText(location.href.split("?")[0]); status.textContent = "Đã sao chép liên kết."; }
     catch { status.textContent = "Bạn có thể sao chép địa chỉ trên thanh trình duyệt."; }
   });
+  if (typeof navigator.share === 'function') {
+    document.querySelectorAll('[data-sobi-native-share]').forEach((button) => {
+      const group = button.closest('.sobi-article-share');
+      const copy = group.querySelector('[data-copy-url]');
+      button.hidden = false;
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.share({ title: document.title, url: new URL(copy.dataset.copyUrl, location.href).href });
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            group.querySelector('.sobi-copy-status').textContent = 'Dùng nút sao chép để chia sẻ liên kết.';
+          }
+        }
+      });
+    });
+  }
   // Touch feedback must start on contact and clear when the gesture becomes a scroll.
   let pressedCard = null;
   const clearCardPress = () => {

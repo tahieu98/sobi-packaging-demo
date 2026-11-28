@@ -1,0 +1,51 @@
+.sobi-article-toc,
+.sobi-toc-sticky {
+  background: var(--sobi-purple);
+  color: #fff;
+  border-radius: 12px;
+}
+.sobi-article-toc {
+  padding: clamp(16px, 3vw, 26px);
+  margin-bottom: 28px;
+}
+.sobi-article-toc p,
+.sobi-toc-sticky summary {
+  color: #ffad62;
+  font-weight: 600;
+}
+.sobi-site .sobi-article-toc p { margin: 0 0 8px; }
+.sobi-article :is(.sobi-article-toc, .sobi-toc-sticky) ol {
+  padding-inline-start: 1.3em;
+  margin-block: 0;
+}
+.sobi-article :is(.sobi-article-toc, .sobi-toc-sticky) li { margin: 0; }
+.sobi-site .sobi-article :is(.sobi-article-toc, .sobi-toc-sticky) a {
+  display: block;
+  padding: 5px 2px;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.sobi-article :is(.sobi-article-toc, .sobi-toc-sticky) :is(a, summary):focus-visible {
+  outline: 2px solid #ffad62;
+  outline-offset: 2px;
+}
+.sobi-toc-sticky {
+  position: fixed;
+  inset: auto auto 24px 16px;
+  z-index: 34;
+  max-width: min(360px, calc(100% - 32px));
+  box-shadow: 0 8px 28px #2d19473d;
+}
+.sobi-toc-sticky summary { padding: 10px 14px; min-height: 44px; cursor: pointer; }
+.sobi-toc-sticky nav {
+  padding: 0 14px 14px;
+  max-height: min(48vh, 360px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.admin-bar .sobi-article-body :is(h2,h3,h4,h5,h6) { scroll-margin-top: 64px; }
+@media (max-width: 767px) {
+  .sobi-toc-sticky { bottom: var(--sobi-quick-clearance, 72px); }
+}

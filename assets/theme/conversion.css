@@ -368,6 +368,8 @@
 .sobi-category-seo-body > :last-child { margin-bottom: 0; }
 .sobi-category-seo-body :is(img, figure, .wp-caption) { max-width: 100%; }
 .sobi-category-seo-body img { height: auto; }
+.sobi-category-seo-body :is(video, .wp-video) { max-width: 100%; }
+.sobi-category-seo-body video { height: auto; }
 .sobi-category-seo-body pre { overflow: auto; }
 
 .sobi-subcategory-hero { background: #f5f6f2; padding-block: 48px; }

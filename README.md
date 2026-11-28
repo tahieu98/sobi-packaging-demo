@@ -77,6 +77,8 @@ Order 47 đồng bộ bài SEO và UX Block trên các trang danh mục. Hai ph�
 
 Phần hoàn thiện Order 47 áp dụng thanh nhảy mục mobile đã duyệt, đồng bộ ô số trong `.sobi-pagination` và hiển thị icon Facebook cùng icon sao chép ở trang bài Blog và chi tiết mẫu. Facebook và clipboard dùng URL của bản demo đang xem.
 
+Order 48 đồng bộ thanh thông tin bài, mục lục trong bài và nút mục lục ghim, các UX Block nút và tư vấn, cùng bài viết liên quan. Chạy `python tools/export_demo.py --sync-blog-editorial` để cập nhật các bài đã có trong demo từ WordPress local. [Xem bài mẫu](blog/quy-trinh-san-xuat-tui-giay-bang-may-tai-sobi/index.html)
+
 Chạy `python tools/export_demo.py --sync-catalogue` để tái xuất từ WordPress local. Chế độ này đọc các trang, ảnh và mã giao diện công khai qua HTTP rồi lưu thành HTML, CSS và JavaScript.
 
 Các trang Sample Page/Hello world cũ được giữ để tránh thiếu nội dung public, nhưng không đưa vào menu chính/danh sách Blog 18 bài. Nội dung/thông số mẫu vẫn là dữ liệu demo của dự án nguồn.

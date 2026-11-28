@@ -17,6 +17,7 @@ export_mode.add_argument('--only', action='append', default=[], help='Export thi
 export_mode.add_argument('--contacts-only', action='store_true', help='Refresh shared contact blocks from the public WordPress homepage.')
 export_mode.add_argument('--sync-catalogue', action='store_true', help='Refresh the public catalogue, products and category navigation.')
 export_mode.add_argument('--sync-audit', action='store_true', help='Refresh the shared layout, homepage and public quote form hints.')
+export_mode.add_argument('--sync-blog-editorial', action='store_true', help='Refresh published article markup and the assets used by the article editorials.')
 parser.add_argument('--catalogue-routes', type=Path, help='Route manifest emitted by order-40-catalogue.php export.')
 args = parser.parse_args()
 route_manifest = json.loads(args.catalogue_routes.read_text(encoding='utf-8-sig')) if args.catalogue_routes else None
@@ -130,7 +131,7 @@ def local_asset(url):
             target.parent.mkdir(parents=True,exist_ok=True)
             if source.is_file():
                 shutil.copyfile(source,target)
-            elif args.sync_audit or args.sync_catalogue:
+            elif args.sync_audit or args.sync_catalogue or args.sync_blog_editorial:
                 target.write_bytes(fetch_bytes(SITE+'wp-content/uploads/'+quote(suffix,safe='/.-_')))
             else:
                 raise RuntimeError(f'Missing public media: {suffix}')
@@ -266,6 +267,8 @@ def install_assets(doc, path):
         catalogue_styles = ['assets/theme/product-category.css', 'assets/theme/catalog-pages.css', 'assets/theme/ux-layouts.css']
     if doc.select_one('.sobi-archive, .sobi-catalogue-facets'):
         catalogue_styles.append('assets/theme/category-archive.css')
+    if doc.select_one('.sobi-article-toc'):
+        catalogue_styles.append('assets/theme/blog-toc.css')
     for asset in [*STYLE_FILES, *catalogue_styles]:
         if asset.endswith('home-audit.css') and path:
             continue
@@ -277,12 +280,91 @@ def install_assets(doc, path):
     scripts = list(SCRIPT_FILES)
     if doc.select_one('.sobi-archive'):
         scripts.extend(['assets/js/category-archive.js', 'assets/theme/category-archive.js'])
+    if doc.select_one('.sobi-toc-sticky'):
+        scripts.append('assets/theme/blog-toc.js')
     for asset in scripts:
         script = doc.new_tag('script', src=versioned_asset(path, asset), defer='')
         if noscript:
             noscript.insert_before(script)
         else:
             doc.body.append(script)
+
+
+def prepare_article_for_demo(doc):
+    for author in doc.select('.sobi-article-byline [data-sobi-author]'):
+        author.string = 'Sobi'
+        avatar = doc.select_one('.sobi-article-avatar')
+        if avatar and not avatar.img:
+            avatar.string = 'S'
+    for anchor in doc.select('.sobi-article-share a[href*="facebook.com/sharer/"]'):
+        anchor['data-demo-share'] = 'facebook'
+        anchor['href'] = 'https://www.facebook.com/sharer/sharer.php'
+
+
+def sync_blog_editorial():
+    """Update the article region from WordPress and keep other demo page bodies."""
+    data_file = OUT / 'assets/js/data.js'
+    data = json.loads(data_file.read_text(encoding='utf-8').split(' = ', 1)[1].rstrip(';\n'))
+    articles = {post['route'] for post in data['posts']} | {'blog/hello-world/'}
+    search = {entry['route']: entry for entry in data['search']}
+    assets = {}
+    for name in ('sobi.css', 'conversion.css', 'blog-toc.css', 'blog-toc.js', 'sobi.js'):
+        content = fetch_bytes(SITE + PUBLIC_THEME + name).rstrip() + b'\n'
+        path = 'assets/theme/' + name
+        if name == 'sobi.js':
+            path = 'assets/js/sobi.js'
+            content = make_demo_script(content.decode('utf-8')).encode('utf-8')
+        (OUT / path).write_bytes(content)
+        assets[path] = hashlib.sha256(content).hexdigest()[:12]
+
+    def source_article(path):
+        return soup(fetch_bytes(SITE + path)).select_one('article.sobi-article')
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        snapshots = dict(zip(sorted(articles), pool.map(source_article, sorted(articles))))
+    for output in OUT.rglob('*.html'):
+        body = output.read_bytes().decode('utf-8')
+        relative = output.relative_to(OUT).as_posix()
+        path = relative.removesuffix('index.html')
+        if path in snapshots:
+            source = snapshots[path]
+            if source is None:
+                raise RuntimeError(f'Missing WordPress article: {path}')
+            doc = soup(body)
+            # Keep the demo's comment form, including its local-only behavior.
+            comments = doc.select_one('.sobi-article-comments')
+            for original in source.select('.sobi-article-comments, script, .block-edit-link'):
+                original.decompose()
+            if comments:
+                comments.extract()
+            stabilize_builder_ids(source, 'sobi-demo-article')
+            prepare_article_for_demo(source)
+            if path in search:
+                search[path]['text'] = source.get_text(' ', strip=True)[:25000]
+            # The preserved comment form already points at demo-local destinations.
+            rewrite_tree(source, path)
+            if comments:
+                source.append(comments)
+            doc.select_one('article.sobi-article').replace_with(source)
+            for tag in doc.select('head link[rel=stylesheet], script[src]'):
+                tag.decompose()
+            install_assets(doc, path)
+            body = render_static_html(doc)
+        for asset, version in assets.items():
+            body = re.sub(r'(' + re.escape(asset) + r'\?v=)[0-9a-f]{12}', lambda match: match[1] + version, body)
+        if body.encode('utf-8') != output.read_bytes():
+            output.write_bytes(body.encode('utf-8'))
+
+    data['search'] = list(search.values())
+    contents = 'window.SOBI_DATA = ' + json.dumps(data, ensure_ascii=False).replace('<', '\\u003c') + ';\n'
+    data_file.write_bytes(contents.encode('utf-8'))
+    version = hashlib.sha256(data_file.read_bytes()).hexdigest()[:12]
+    for output in OUT.rglob('*.html'):
+        body = output.read_bytes()
+        updated = re.sub(rb'(assets/js/data\.js\?v=)[0-9a-f]{12}', lambda match: match[1] + version.encode(), body)
+        if body != updated:
+            output.write_bytes(updated)
+    print(f'Synchronized {len(articles)} public Blog articles.')
 
 
 def sync_public_audit():
@@ -578,6 +660,10 @@ if args.sync_catalogue:
 if args.sync_audit:
     sync_public_audit()
     raise SystemExit(0)
+if args.sync_blog_editorial:
+    known.update(path.removesuffix('index.html') for path in json.loads((OUT/'docs/content-manifest.json').read_text(encoding='utf-8'))['pages'])
+    sync_blog_editorial()
+    raise SystemExit(0)
 
 
 pages=api('pages'); posts=api('posts'); categories=api('categories')
@@ -697,16 +783,9 @@ for r,raw in documents.items():
         for toggle in title_el.select('button.toggle'):toggle.name='span'
         panel=doc.find(id=title_el.get('aria-controls'))
         if panel:panel['hidden']='';panel['role']='region'
-    for text in doc.select('.sobi-article-byline'):
-        # Public marketing demo does not need an internal WordPress login name.
-        text.string=re.sub(r'Bởi .*? ·','Bởi Sobi ·',text.get_text(' ',strip=True))
     # Order 38: the static demo no longer adds a demo banner.
     rewrite_tree(doc,r)
-    # Replace stale source-site URLs in third-party share parameters.
-    for anchor in doc.select('.sobi-article-share a'):
-        if 'facebook.com/sharer/' in anchor.get('href',''):
-            anchor['data-demo-share']='facebook'
-            anchor['href']='https://www.facebook.com/sharer/sharer.php'
+    prepare_article_for_demo(doc)
     install_assets(doc, r)
     noscript=doc.new_tag('noscript');noscript.string='Bật JavaScript để dùng bộ lọc, menu và form mô phỏng. Nội dung trang vẫn có thể đọc trực tiếp.';doc.body.append(noscript)
     output=OUT/('404.html' if r=='404.html' else r+'index.html')
