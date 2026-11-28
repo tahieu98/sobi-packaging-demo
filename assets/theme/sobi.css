@@ -2730,8 +2730,13 @@
 .sobi-blog-consult-panel > .col { padding: 24px; }
 .sobi-article-related,.sobi-article-comments { margin-top: 32px; }
 .sobi-related-title { font-size: 20px; color: var(--sobi-purple); }
-.sobi-article-related li { margin-left: 20px; }
-.sobi-article-related a { display: inline-block; padding-block: 10px; color: var(--sobi-purple); }
+.sobi-article-author a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.sobi-article-related .sobi-blog-grid { gap: clamp(12px, 2vw, 20px); }
+.sobi-article-related .sobi-blog-card-copy { padding: clamp(12px, 2vw, 18px); }
+.sobi-site #main .sobi-article-related h3 { font-size: clamp(16px, 2vw, 19px); line-height: 1.45; margin-block: 10px 0; }
+@media (min-width: 768px) {
+  .sobi-article-related .sobi-blog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 .sobi-article-comments :is(input,textarea) { max-width: 100%; font-size: 16px; }
 .sobi-content-pagination { display: flex; flex-wrap: wrap; gap: 12px; padding-block: 20px; }
 .sobi-content-pagination :is(a,span) { padding: 6px 10px; }
@@ -2744,4 +2749,25 @@
   .sobi-article { padding-block: 28px 40px; }
   .sobi-article-share.sobi-article-share-compact { margin-inline-start: 0; }
   .sobi-blog-category-hero { padding-block: 28px; }
+}
+
+.sobi-team { padding-block: clamp(32px, 6vw, 72px); }
+.sobi-team-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 3vw, 32px); }
+.sobi-team-member { min-width: 0; border: 1px solid var(--sobi-line); border-radius: 16px; overflow: hidden; background: #fff; }
+.sobi-team-photo { display: grid; place-items: center; aspect-ratio: 4 / 3; background: #f3edf8; color: var(--sobi-purple); font-size: clamp(48px, 8vw, 96px); font-weight: 600; }
+.sobi-team-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+.sobi-team-copy { padding: clamp(16px, 3vw, 32px); overflow-wrap: anywhere; }
+.sobi-site #main .sobi-team-grid h2 { margin-block: 0 8px; font-size: clamp(20px, 2.5vw, 26px); }
+.sobi-team-role { color: var(--sobi-muted); }
+.sobi-team-copy > :last-child { margin-bottom: 0; }
+.sobi-team-back { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 12px; }
+.sobi-team-profile { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; }
+.sobi-team-profile .sobi-team-photo { aspect-ratio: 1; }
+.sobi-team-links { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 20px; }
+.sobi-team-links .button { margin: 0; min-height: 44px; }
+.sobi-team-bio { max-width: 68ch; }
+@media (max-width: 991px) { .sobi-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 599px) {
+  .sobi-team-grid, .sobi-team-profile { grid-template-columns: minmax(0, 1fr); }
+  .sobi-team-profile .sobi-team-photo { aspect-ratio: 4 / 3; }
 }

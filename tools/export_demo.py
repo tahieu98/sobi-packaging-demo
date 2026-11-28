@@ -166,7 +166,7 @@ def rewrite_url(url,path='',template=False):
             query = urlencode(fields, doseq=True)
     # Blog numbered URLs use the same HTML and browser-side pagination.
     m=re.search(r'^(.*?)/?page/(\d+)/$',dest)
-    if m:
+    if m and not dest.startswith('doi-ngu/'):
         dest=m.group(1).strip('/')+'/'
         q=parse_qs(query);q['trang']=[m.group(2)];query=urlencode(q,doseq=True)
     if dest not in known:
@@ -183,7 +183,7 @@ def rewrite_tree(tree,path='',template=False):
     if not isinstance(tree, BeautifulSoup):
         tags.insert(0, tree)
     for tag in tags:
-        for attr in ['href','src','poster','action','data-video-src','data-copy-url']:
+        for attr in ['href','src','poster','action','data-video-src','data-copy-url','data-sobi-native-share']:
             if tag.has_attr(attr):tag[attr]=rewrite_url(tag[attr],path,template)
         if tag.has_attr('srcset'):
             pieces=[]
@@ -291,7 +291,8 @@ def install_assets(doc, path):
 
 
 def prepare_article_for_demo(doc):
-    for author in doc.select('.sobi-article-byline [data-sobi-author]'):
+    author = doc.select_one('.sobi-article-byline [data-sobi-author]')
+    if author and not author.a:
         author.string = 'Sobi'
         avatar = doc.select_one('.sobi-article-avatar')
         if avatar and not avatar.img:
@@ -301,12 +302,57 @@ def prepare_article_for_demo(doc):
         anchor['href'] = 'https://www.facebook.com/sharer/sharer.php'
 
 
+def team_snapshots():
+    pages = {'doi-ngu/': soup(fetch_bytes(SITE + 'doi-ngu/'))}
+    pending = ['doi-ngu/']
+    while pending:
+        path = pending.pop()
+        main = pages[path].select_one('main')
+        for link in main.select('.sobi-team-grid h2 a, .sobi-pagination a[href]'):
+            target = route(link['href'])
+            if target.startswith('doi-ngu/') and target not in pages:
+                pages[target] = soup(fetch_bytes(SITE + target))
+                if pages[target].select_one('.sobi-team-grid'):
+                    pending.append(target)
+    return pages
+
+
+def team_page(snapshot, path):
+    doc = soup((OUT / 've-sobi/index.html').read_bytes())
+    for selector in ('#header', '#footer', 'main'):
+        block = snapshot.select_one(selector)
+        for item in block.select('script, .post-edit-link, .block-edit-link'):
+            item.decompose()
+        doc.select_one(selector).replace_with(rewrite_tree(block, path))
+    sync_quick_contacts(doc, snapshot, path)
+    doc.title.string = snapshot.title.get_text() + ' · Demo'
+    doc.body['class'] = [*snapshot.body.get('class', []), 'sobi-static-demo']
+    doc.select_one('meta[name="sobi-route"]')['content'] = path
+    doc.select_one('meta[name="sobi-root"]')['content'] = relative_root(path)
+    doc.select_one('link[rel="icon"]')['href'] = relative_root(path) + 'assets/theme/images/sobi-site-icon.png'
+    description = snapshot.select_one('meta[name="description"]')
+    doc.select_one('meta[name="description"]')['content'] = description.get('content', '') if description else ''
+    return doc
+
+
 def sync_blog_editorial():
-    """Update the article region from WordPress and keep other demo page bodies."""
+    """Refresh public Blog articles, category SEO articles and team pages."""
     data_file = OUT / 'assets/js/data.js'
     data = json.loads(data_file.read_text(encoding='utf-8').split(' = ', 1)[1].rstrip(';\n'))
     articles = {post['route'] for post in data['posts']} | {'blog/hello-world/'}
     search = {entry['route']: entry for entry in data['search']}
+    manifest_file = OUT / 'docs/content-manifest.json'
+    manifest = json.loads(manifest_file.read_bytes())
+    files = [OUT / output for output in manifest['pages']]
+    category_paths = set()
+    for output in files:
+        if b'sobi-category-seo-article' in output.read_bytes():
+            category_paths.add(output.relative_to(OUT).as_posix().removesuffix('index.html'))
+    team = team_snapshots()
+    stale_team_paths = {path for path in known if path.startswith('doi-ngu/')} - team.keys()
+    known.difference_update(stale_team_paths)
+    known.update(team)
+    footer_team = team['doi-ngu/'].select_one('#footer .sobi-footer-team')
     assets = {}
     for name in ('sobi.css', 'conversion.css', 'blog-toc.css', 'blog-toc.js', 'sobi.js'):
         content = fetch_bytes(SITE + PUBLIC_THEME + name).rstrip() + b'\n'
@@ -317,20 +363,19 @@ def sync_blog_editorial():
         (OUT / path).write_bytes(content)
         assets[path] = hashlib.sha256(content).hexdigest()[:12]
 
-    def source_article(path):
-        return soup(fetch_bytes(SITE + path)).select_one('article.sobi-article')
-
+    source_paths = sorted(articles | category_paths)
     with ThreadPoolExecutor(max_workers=4) as pool:
-        snapshots = dict(zip(sorted(articles), pool.map(source_article, sorted(articles))))
-    for output in OUT.rglob('*.html'):
-        body = output.read_bytes().decode('utf-8')
-        relative = output.relative_to(OUT).as_posix()
-        path = relative.removesuffix('index.html')
-        if path in snapshots:
-            source = snapshots[path]
+        snapshots = dict(zip(source_paths, pool.map(lambda path: soup(fetch_bytes(SITE + path)), source_paths)))
+    for output in files:
+        original = output.read_bytes()
+        path = output.relative_to(OUT).as_posix().removesuffix('index.html')
+        if path in team or path in stale_team_paths:
+            continue
+        doc = soup(original)
+        if path in articles:
+            source = snapshots[path].select_one('article.sobi-article')
             if source is None:
                 raise RuntimeError(f'Missing WordPress article: {path}')
-            doc = soup(body)
             # Keep the demo's comment form, including its local-only behavior.
             comments = doc.select_one('.sobi-article-comments')
             for original in source.select('.sobi-article-comments, script, .block-edit-link'):
@@ -346,14 +391,47 @@ def sync_blog_editorial():
             if comments:
                 source.append(comments)
             doc.select_one('article.sobi-article').replace_with(source)
+        elif path in category_paths:
+            old = doc.select_one('.sobi-category-seo-article')
+            source = snapshots[path].select_one('.sobi-category-seo-article')
+            if source:
+                old.replace_with(rewrite_tree(source, path))
+            else:
+                old.decompose()
+        footer_menu = doc.select_one('#footer .sobi-footer-links')
+        if footer_menu and footer_team:
+            link = rewrite_tree(soup(str(footer_team)).find(), path)
+            existing = doc.select_one('#footer .sobi-footer-team')
+            if existing:
+                existing.replace_with(link)
+            else:
+                footer_menu.insert_after(link)
+        if path in snapshots:
             for tag in doc.select('head link[rel=stylesheet], script[src]'):
                 tag.decompose()
             install_assets(doc, path)
-            body = render_static_html(doc)
+        body = render_static_html(doc)
         for asset, version in assets.items():
             body = re.sub(r'(' + re.escape(asset) + r'\?v=)[0-9a-f]{12}', lambda match: match[1] + version, body)
-        if body.encode('utf-8') != output.read_bytes():
+        if body.encode('utf-8') != original:
             output.write_bytes(body.encode('utf-8'))
+
+    for path, snapshot in team.items():
+        doc = team_page(snapshot, path)
+        for tag in doc.select('head link[rel=stylesheet], script[src]'):
+            tag.decompose()
+        install_assets(doc, path)
+        output = OUT / path / 'index.html'
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_bytes(render_static_html(doc).encode('utf-8'))
+
+    for path in stale_team_paths:
+        (OUT / path / 'index.html').unlink(missing_ok=True)
+    manifest['pages'] = sorted(path + 'index.html' for path in known if path != '404.html')
+    if (OUT / '404.html').is_file():
+        manifest['pages'].insert(0, '404.html')
+    manifest['media_files'] = sum(asset.is_file() for asset in (OUT / 'assets/media').rglob('*'))
+    manifest_file.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n', encoding='utf-8', newline='\n')
 
     data['search'] = list(search.values())
     contents = 'window.SOBI_DATA = ' + json.dumps(data, ensure_ascii=False).replace('<', '\\u003c') + ';\n'
@@ -364,7 +442,7 @@ def sync_blog_editorial():
         updated = re.sub(rb'(assets/js/data\.js\?v=)[0-9a-f]{12}', lambda match: match[1] + version.encode(), body)
         if body != updated:
             output.write_bytes(updated)
-    print(f'Synchronized {len(articles)} public Blog articles.')
+    print(f'Synchronized {len(articles)} Blog articles, {len(category_paths)} category SEO articles, and {len(team)} team pages.')
 
 
 def sync_public_audit():

@@ -154,14 +154,14 @@
   if (typeof navigator.share === 'function') {
     document.querySelectorAll('[data-sobi-native-share]').forEach((button) => {
       const group = button.closest('.sobi-article-share');
-      const copy = group.querySelector('[data-copy-url]');
+      const status = group.querySelector('.sobi-copy-status');
       button.hidden = false;
       button.addEventListener('click', async () => {
         try {
-          await navigator.share({ title: document.title, url: new URL(copy.dataset.copyUrl, location.href).href });
+          await navigator.share({ title: document.title, url: new URL(button.dataset.sobiNativeShare, location.href).href });
         } catch (error) {
-          if (error.name !== 'AbortError') {
-            group.querySelector('.sobi-copy-status').textContent = 'Dùng nút sao chép để chia sẻ liên kết.';
+          if (error.name !== 'AbortError' && status) {
+            status.textContent = 'Dùng nút sao chép để chia sẻ liên kết.';
           }
         }
       });

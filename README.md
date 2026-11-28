@@ -106,3 +106,9 @@ Xem [kết quả Order 24](docs/order-24.md#tái-xuất-và-kiểm-chứng) cho 
 Repository này chỉ chứa demo. GitHub Pages phục vụ các tệp static từ nhánh `main`, thư mục gốc (`/`); không chạy WordPress/PHP hoặc công cụ Python. Đường dẫn public là https://tahieu98.github.io/sobi-packaging-demo/.
 
 Khi cần cập nhật demo: sửa tệp, kiểm tra, commit và `git push origin main`. GitHub tự dựng lại Pages sau khi nhánh `main` được cập nhật. Đây là luồng riêng với repository WordPress và không triển khai vào XAMPP. Không cần npm, Git LFS, workflow custom hoặc dịch vụ video trả phí cho bản hiện tại.
+
+## Order 49
+
+Bản HTML có trang đội ngũ và hồ sơ minh họa, tối đa ba thẻ bài liên quan, nút sao chép ở nhóm chia sẻ cuối bài và mục lục ghim có nút đóng. Bài SEO Túi giấy có nội dung mẫu với H3 và H4. [Đội ngũ](doi-ngu/index.html) · [Hồ sơ minh họa](doi-ngu/ho-so-minh-hoa/index.html) · [Túi giấy](tui-giay/index.html#sobi-category-guide)
+
+Khi WordPress nguồn chạy tại `sobi-packaging.test`, dùng `python tools/export_demo.py --sync-blog-editorial` để cập nhật các phần này từ HTML công khai. Trường chọn tác giả, thông tin nhân sự và cấu hình mục lục được biên tập trong WordPress.
